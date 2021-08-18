@@ -1,0 +1,20 @@
+Package: ptools
+Title: Tools for Poisson Data
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Andrew",
+           family = "Wheeler",
+           role = c("aut", "cre"),
+           email = "apwheele@gmail.com",
+           comment = c(ORCID = "0000-0003-2255-1316"))
+Description: Some functions I have used for analyzing count data, mostly crime counts. Includes checking difference in two Poisson counts (e-test), checking the fit for a Poisson distribution. Functions to calculate small sample tests for counts in bins (e.g. days of week, or can be applied to Benfords law). And functions for my WDD test to evaluate crime changes over time in treated/control areas.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    stats
