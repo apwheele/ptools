@@ -69,10 +69,18 @@ wdd(cont,treat,time_weights=c(2,1))
 # With different area sizes
 wdd(cont,treat,dispcont,disptreat,area_weights=c(2,1.5,3,3.2))
 
+# You can technically use this even without pre (so just normal based approximation)
+# just put in 0's for the pre data (so does not factor into variance)
+res_test <- wdd(c(0,20),c(0,10))
+twotail_p <- pnorm(res_test['Z'])*2
+print(twotail_p) #~0.068
+# e-test is very similar
+e_test(20,10) #~0.069
 }
 \references{
 Wheeler, A. P., & Ratcliffe, J. H. (2018). A simple weighted displacement difference test to evaluate place based crime interventions. \emph{Crime Science}, 7(1), 1-9.
 }
 \seealso{
 \code{\link[=wdd_harm]{wdd_harm()}} for aggregating multiple WDD tests into one metric (e.g. based on crime harm weights)
+\code{\link[=e_test]{e_test()}} for checking the difference in two Poisson means
 }

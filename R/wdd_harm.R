@@ -4,7 +4,7 @@
 #'
 #' @param est vector with WDD estimates (e.g. difference in crime counts for treated vs controls)
 #' @param se vector with standard errors for WDD estimates
-#' @param harm_weights vector with weights to aggregate results
+#' @param weight vector with weights to aggregate results
 #' @param alpha scaler alpha level for confidence interval (default `0.1`)
 #'
 #' @details This test combines multiple wdd estimates with different weights. Created to [combine tests for crime harm weights](https://andrewpwheeler.com/2020/11/19/amending-the-wdd-test-to-incorporate-harm-weights/).
@@ -24,7 +24,9 @@
 #' # passing those columns now to the wdd_harm function
 #' harm_weights <- c(10,5,1)
 #' wdd_harm(dat$Est_Local,dat$SE_Local,harm_weights)
-#' @seealso [wdd()]
+#' @seealso [wdd()] for estimating the individual wdd outcomes
+#\code{\link{wdd}}
+
 wdd_harm <- function(est,se,weight,alpha=0.1){
     # Harm estimates 
     harm_est <- est*weight

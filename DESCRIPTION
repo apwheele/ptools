@@ -7,8 +7,9 @@ Authors@R:
            role = c("aut", "cre"),
            email = "apwheele@gmail.com",
            comment = c(ORCID = "0000-0003-2255-1316"))
-Description: Some functions I have used for analyzing count data, mostly crime counts. Includes checking difference in two Poisson counts (e-test), checking the fit for a Poisson distribution. Functions to calculate small sample tests for counts in bins (e.g. days of week, or can be applied to Benfords law). And functions for my WDD test to evaluate crime changes over time in treated/control areas.
+Description: Some functions I have used for analyzing count data, mostly crime counts. Includes checking difference in two Poisson counts (e-test), checking the fit for a Poisson distribution. Functions to calculate small sample tests for counts in bins (e.g. days of week, or can be applied to Benfords law). And functions for Wheeler & Ratcliffe's WDD test to evaluate crime changes over time in treated/control areas.
 License: MIT + file LICENSE
+URL: https://github.com/apwheele/ptools
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -17,4 +18,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
+    partitions,
     stats

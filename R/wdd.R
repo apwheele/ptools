@@ -43,9 +43,19 @@
 #' # With different area sizes
 #' wdd(cont,treat,dispcont,disptreat,area_weights=c(2,1.5,3,3.2))
 #' 
+#' # You can technically use this even without pre (so just normal based approximation)
+#' # just put in 0's for the pre data (so does not factor into variance)
+#' res_test <- wdd(c(0,20),c(0,10))
+#' twotail_p <- pnorm(res_test['Z'])*2
+#' print(twotail_p) #~0.068
+#' # e-test is very similar
+#' e_test(20,10) #~0.069
 #' @references
 #' Wheeler, A. P., & Ratcliffe, J. H. (2018). A simple weighted displacement difference test to evaluate place based crime interventions. *Crime Science*, 7(1), 1-9.
-#' @seealso [wdd_harm()] for aggregating multiple WDD tests into one metric (e.g. based on crime harm weights)
+#' @seealso 
+#' [wdd_harm()] for aggregating multiple WDD tests into one metric (e.g. based on crime harm weights)
+#' [e_test()] for checking the difference in two Poisson means
+
 wdd <- function(control,treated,disp_control=c(0,0),
                 disp_treated=c(0,0),
                 time_weights=c(1,1),area_weights=c(1,1,1,1),
@@ -65,9 +75,9 @@ wdd <- function(control,treated,disp_control=c(0,0),
     est_disp <- (disp_treated[2]/dpost_w - disp_treated[1]/dpre_w) - (disp_control[2]/dcpos_w - disp_control[1]/dcpre_w)
     var_disp <- disp_treated[2]*((1/dpost_w)^2) + disp_treated[1]*((1/dpre_w)^2) + disp_control[2]*((1/dcpos_w)^2 + disp_control[1]*((1/dcpre_w)^2))
     tot_est <- est_local + est_disp
-    var_tot <- var_local + var_disp 
+    var_tot <- var_local + var_disp
     # Inference stats
-    level <- qnorm(1 - alpha/2)
+    level <- stats::qnorm(1 - alpha/2)
     z_score <- tot_est/sqrt(var_tot)
     low_ci  <- tot_est - level*sqrt(var_tot)
     high_ci <- tot_est + level*sqrt(var_tot)

@@ -11,9 +11,9 @@ wdd_harm(est, se, weight, alpha = 0.1)
 
 \item{se}{vector with standard errors for WDD estimates}
 
-\item{alpha}{scaler alpha level for confidence interval (default \code{0.1})}
+\item{weight}{vector with weights to aggregate results}
 
-\item{harm_weights}{vector with weights to aggregate results}
+\item{alpha}{scaler alpha level for confidence interval (default \code{0.1})}
 }
 \value{
 A length 5 vector with names:
@@ -41,5 +41,5 @@ harm_weights <- c(10,5,1)
 wdd_harm(dat$Est_Local,dat$SE_Local,harm_weights)
 }
 \seealso{
-\code{\link[=wdd]{wdd()}}
+\code{\link[=wdd]{wdd()}} for estimating the individual wdd outcomes
 }
