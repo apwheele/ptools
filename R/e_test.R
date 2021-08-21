@@ -8,6 +8,7 @@
 #' @param n2 scaler divisor for k2 (e.g. rate per unit time or per area), default 1
 #' @param d scaler amends the null test by a constant amount, default 0
 #' @param eps scaler where to terminate sum in testing larger deviations, default 1e-20
+#' @param silent boolean if TRUE, does not print error messages
 #'
 #' @details This e-test tests the differences in two Poisson counts or rates. The null is more formally:
 #' 
@@ -39,7 +40,7 @@
 #' @seealso [wdd()], can use that function for a normal based approximation to the difference in Poisson means as well as pre/post designs
 #' @references
 #' Krishnamoorthy, K., & Thomson, J. (2004). A more powerful test for comparing two Poisson means. *Journal of Statistical Planning and Inference*, 119(1), 23-35.
-e_test <- function(k1,k2,n1=1,n2=1,d=0,eps=1e-20){
+e_test <- function(k1,k2,n1=1,n2=1,d=0,eps=1e-20,silent=FALSE){
     #this function finds the integer for poisson
     #PMF that has a density of less than eps
     #where to terminate the sum
@@ -53,11 +54,11 @@ e_test <- function(k1,k2,n1=1,n2=1,d=0,eps=1e-20){
         return(int)
     }
     if ( (k1 == 0 & k2 == 0) ){
-        print('Not defined for case when both values are zero')
+        if (!silent){ cat('\n\tNot defined for case when both values are zero\n\n') }
         return(-1)
     }
     else if ( (k1 < 0 | k2 < 0 | n1 <= 0 | n2 <= 0) ){
-        print('k and n arguments should be positive values')
+        if (!silent){ cat('\n\tk and n arguments should be positive values\n\n') }
         return(-1)
     }
     r1 <- k1/n1 #rate first process

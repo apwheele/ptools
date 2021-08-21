@@ -27,7 +27,7 @@
 #' @seealso [wdd()] for estimating the individual wdd outcomes
 #\code{\link{wdd}}
 
-wdd_harm <- function(est,se,weight,alpha=0.1){
+wdd_harm <- function(est,se,weight,alpha=0.1,silent=FALSE){
     # Harm estimates 
     harm_est <- est*weight
     harm_var <- (se^2)*(weight^2)
@@ -39,8 +39,10 @@ wdd_harm <- function(est,se,weight,alpha=0.1){
     z_score <- tot_harm/tot_harm_se
     low_ci <-  tot_harm - level*tot_harm_se
     high_ci <- tot_harm + level*tot_harm_se
-    print(paste0('The total WDD harm estimate is ',round(tot_harm,1),' (',round(tot_harm_se,1),')'))
-    print(paste0('The ',round(100*(1-alpha)),'% confidence interval is ',round(low_ci,1),' to ',round(high_ci,1)))
+    if (!silent){
+        cat(paste0('\n\tThe total WDD harm estimate is ',round(tot_harm,1),' (',round(tot_harm_se,1),')'))
+        cat(paste0('\n\tThe ',round(100*(1-alpha)),'% confidence interval is ',round(low_ci,1),' to ',round(high_ci,1),'\n\n'))
+    }
     res <- c(tot_harm,tot_harm_se,z_score,low_ci,high_ci)
     names(res) <- c('HarmEst','SE_HarmEst','Z','LowCI','HighCI')
     return(res)

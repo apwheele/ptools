@@ -9,6 +9,7 @@
 #' @param time_weights vector with weights for time periods for pre/post (default `c(1,1)`)
 #' @param area_weights vector with weights for different sized areas, order is c(control,treated,disp_control,disp_treated) (default `c(1,1,1,1)`)
 #' @param alpha scaler alpha level for confidence interval (default `0.1`)
+#' @param silent boolean set to TRUE if you do not want anything printed out (default FALSE)
 #'
 #' @details The wdd (weighted displacement difference) test is an extensions to differences-in-differences when observed count data pre/post in treated control areas. The test statistic (ignoring displacement areas and weights) is:
 #' 
@@ -59,7 +60,7 @@
 wdd <- function(control,treated,disp_control=c(0,0),
                 disp_treated=c(0,0),
                 time_weights=c(1,1),area_weights=c(1,1,1,1),
-                alpha=0.1){
+                alpha=0.1, silent=FALSE){
     # Generating the weights
     cpre_w  <- time_weights[1]*area_weights[1]
     cpost_w <- time_weights[2]*area_weights[1]
@@ -73,7 +74,7 @@ wdd <- function(control,treated,disp_control=c(0,0),
     est_local <- (treated[2]/tpost_w - treated[1]/tpre_w) - (control[2]/cpost_w - control[1]/cpre_w)
     var_local <- treated[2]*((1/tpost_w)^2) + treated[1]*((1/tpre_w)^2) + control[2]*((1/cpost_w)^2) + control[1]*((1/cpre_w)^2)
     est_disp <- (disp_treated[2]/dpost_w - disp_treated[1]/dpre_w) - (disp_control[2]/dcpos_w - disp_control[1]/dcpre_w)
-    var_disp <- disp_treated[2]*((1/dpost_w)^2) + disp_treated[1]*((1/dpre_w)^2) + disp_control[2]*((1/dcpos_w)^2 + disp_control[1]*((1/dcpre_w)^2))
+    var_disp <- disp_treated[2]*((1/dpost_w)^2) + disp_treated[1]*((1/dpre_w)^2) + disp_control[2]*((1/dcpos_w)^2) + disp_control[1]*((1/dcpre_w)^2)
     tot_est <- est_local + est_disp
     var_tot <- var_local + var_disp
     # Inference stats
@@ -82,10 +83,12 @@ wdd <- function(control,treated,disp_control=c(0,0),
     low_ci  <- tot_est - level*sqrt(var_tot)
     high_ci <- tot_est + level*sqrt(var_tot)
     # Printing results
-    print(paste0('The local WDD estimate is ',round(est_local,1),' (',round(sqrt(var_local),1),')'))
-    print(paste0('The displacement WDD estimate is ',round(est_disp,1),' (',round(sqrt(var_disp),1),')'))
-    print(paste0('The total WDD estimate is ',round(tot_est,1),' (',round(sqrt(var_tot),1),')'))
-    print(paste0('The ',round(100*(1-alpha)),'% confidence interval is ',round(low_ci,1),' to ',round(high_ci,1)))
+    if (!silent){
+        cat(paste0('\n\tThe local WDD estimate is ',round(est_local,1),' (',round(sqrt(var_local),1),')'))
+        cat(paste0('\n\tThe displacement WDD estimate is ',round(est_disp,1),' (',round(sqrt(var_disp),1),')'))
+        cat(paste0('\n\tThe total WDD estimate is ',round(tot_est,1),' (',round(sqrt(var_tot),1),')'))
+        cat(paste0('\n\tThe ',round(100*(1-alpha)),'% confidence interval is ',round(low_ci,1),' to ',round(high_ci,1),'\n\n'))
+    }
     res <- c(est_local,sqrt(var_local),est_disp,sqrt(var_disp),tot_est,sqrt(var_tot),z_score,low_ci,high_ci)
     names(res) <- c('Est_Local','SE_Local','Est_Displace','SE_Displace','Est_Total','SE_Total','Z','LowCI','HighCI')
     return(res)

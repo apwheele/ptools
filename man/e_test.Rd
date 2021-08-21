@@ -4,7 +4,7 @@
 \alias{e_test}
 \title{Poisson E-test}
 \usage{
-e_test(k1, k2, n1 = 1, n2 = 1, d = 0, eps = 1e-20)
+e_test(k1, k2, n1 = 1, n2 = 1, d = 0, eps = 1e-20, silent = FALSE)
 }
 \arguments{
 \item{k1}{scaler Poisson count}
@@ -18,6 +18,8 @@ e_test(k1, k2, n1 = 1, n2 = 1, d = 0, eps = 1e-20)
 \item{d}{scaler amends the null test by a constant amount, default 0}
 
 \item{eps}{scaler where to terminate sum in testing larger deviations, default 1e-20}
+
+\item{silent}{boolean if TRUE, does not print error messages}
 }
 \value{
 A scaler p-value. Will return -1 if inputs don't make sense and print an error message, e.g. \code{e_test(0,0)} is undefined and will return a -1.

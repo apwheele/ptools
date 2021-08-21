@@ -4,7 +4,7 @@
 \alias{wdd_harm}
 \title{Combines Multiple WDD Tests}
 \usage{
-wdd_harm(est, se, weight, alpha = 0.1)
+wdd_harm(est, se, weight, alpha = 0.1, silent = FALSE)
 }
 \arguments{
 \item{est}{vector with WDD estimates (e.g. difference in crime counts for treated vs controls)}

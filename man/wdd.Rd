@@ -11,7 +11,8 @@ wdd(
   disp_treated = c(0, 0),
   time_weights = c(1, 1),
   area_weights = c(1, 1, 1, 1),
-  alpha = 0.1
+  alpha = 0.1,
+  silent = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ wdd(
 \item{area_weights}{vector with weights for different sized areas, order is c(control,treated,disp_control,disp_treated) (default \code{c(1,1,1,1)})}
 
 \item{alpha}{scaler alpha level for confidence interval (default \code{0.1})}
+
+\item{silent}{boolean set to TRUE if you do not want anything printed out (default FALSE)}
 }
 \value{
 A length 9 vector with names:

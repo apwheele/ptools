@@ -75,3 +75,24 @@ Here is an example checking the Poisson fit for a set of data:
 x <- stats::rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 ```
+
+## Contributing
+
+Always feel free to contribute either directly on Github, or email me with thoughts/suggestions. For citations for functions used, feel free to cite the original papers I reference in the functions instead of the package directly. 
+
+Things on the todo list:
+
+ - unit tests
+ - github actions
+ - Poisson z-score
+ - Contours for pre/post Poisson {NYC Data)
+ - funnel charts
+ - SPPT with already aggregated data, SPPT power
+ - PAI/RRI functions
+ - ?Potentially geo functions?
+  - create grid
+  - Theissen helpers
+  - HDR raster
+  - Near spacetime
+  - Hexagons
+  - Leaflet helpers
