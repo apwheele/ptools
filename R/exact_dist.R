@@ -53,7 +53,7 @@ exactMult <- function(v,p=rep(1/length(v),length(v))){
 }
 
 # generating the data frame for the exact probabilities
-#' @export
+# Should I export this?
 exactProb <- function(n,m,p=rep(1/m,m),type="G"){
   AllDat <- t(partitions::compositions(n,m))
   ExactProb <- apply(AllDat,1,exactMult,p=p)
@@ -70,6 +70,8 @@ exactProb <- function(n,m,p=rep(1/m,m),type="G"){
   #MyData$cumprob <- cumsum(MyData$ExactProb)
   return(MyData)
 }
+
+
 
 #' Small Sample Exact Test for Counts in Bins
 #'
@@ -144,7 +146,7 @@ small_samptest <- function(d,p=rep(1/length(d),length(d)),type="G",cdf=FALSE){
   else if (type == "KS") {
     Samp <- KSTest(d,p)  }  
   #p-value to the right of the test statistic, aggregating first
-  Agg <- aggregate(x=cdf[,'ExactProb'],by=list(cdf$Stat),FUN=sum)
+  Agg <- stats::aggregate(x=cdf[,'ExactProb'],by=list(cdf$Stat),FUN=sum)
   names(Agg) <- c("Stat","ExactProb")
   Agg$cumprob <- cumsum(Agg$ExactProb)
   pvalue <- sum(Agg[Agg[,'Stat'] >= Samp,'ExactProb'])
@@ -154,6 +156,9 @@ small_samptest <- function(d,p=rep(1/length(d),length(d)),type="G",cdf=FALSE){
   class(t) <- "SmallSampleTest"
   return(t)
 }
+
+methods::setClass("SmallSampleTest",slots = c(CDF="data.frame", probabilities="numeric",data="numeric",
+         test="character",test_stat="numeric",p_value="numeric",AggregateStatistics="data.frame"))
 
 #' Power for Small Sample Exact Test
 #'
@@ -205,11 +210,11 @@ small_samptest <- function(d,p=rep(1/length(d),length(d)),type="G",cdf=FALSE){
 powalt <- function(SST,p_alt,a=.05){
   x <- merge(SST$CDF,SST$`AggregateStatistics`,by="Stat")
   x$AltProb <- apply(as.matrix(x[,2:(1+length(p_alt))]),1,exactMult,p=p_alt)
+  # For ties, need to get 'over' that value
   over_prob <- 1 - (x[,'cumprob'] - x[,'ExactProb.y'])
-  #power <- sum(x[x[,'cumprob'] > (1-a),'AltProb']) #power of alt
-  power <- sum(x[over_prob < a,'AltProb']) #power of alt
-  r <- list(x,power,p_alt,SST$probabilities,a,SST$test)
-  names(r) <- c("permutations","power","alternative","null","alpha","test_type")
+  pow <- sum(x[over_prob < a,'AltProb']) #power of alt
+  r <- list(x,pow,p_alt,SST$probabilities,a,SST$test)
+  names(r) <- c("permutations","pow","alt","null","alpha","test")
   names(r$permutations)[1] <- names(SST[4])
   class(r) <- "PowerSmallSamp"
   return(r)
@@ -217,28 +222,33 @@ powalt <- function(SST,p_alt,a=.05){
 #also see http://stats.stackexchange.com/a/125150/1036
 #for an example of calculating the power under a particular alternative
 
+methods::setClass("PowerSmallSamp",slots = c(permutations="data.frame", pow="numeric", alt="numeric",
+                  null="numeric",alpha="numeric",test="character"))
+
 #print function for classes need to be exported
-#' @export
-print.SmallSampleTest <- function(x,...){
-  cat("\tSmall Sample Test Object \n")
+# export
+print.small_samptest <- function(x,...){
+  cat("\n\tSmall Sample Test Object \n")
   cat(paste0("\tTest Type is ",x$test," \n"))
   cat(paste0("\tStatistic is: ",x$test_stat," \n"))
   cat("\tp-value is: ",x$'p_value'," \n")
   cat("\tData are: ",paste(x$data),"\n")
   cat("\tNull probabilities are: ",formatC(x$probabilities,digits=2),"\n")
-  cat("\tTotal permutations are: ",length(x$CDF[,1])," \n")
+  cat("\tTotal permutations are: ",length(x$CDF[,1]),"\n\n")
 }
+setMethod("print","SmallSampleTest",print.small_samptest)
 
-#' @export
-print.PowerSmallSamp <- function(x){
-  cat("\tPower for Small Sample Test \n")
-  cat("\tTest type is:",x$test_type," \n")
-  cat("\tPower is:",x$power," \n")
-  cat("\tNull is:",formatC(x$null,digits=2)," \n")
-  cat("\tAlt is:",formatC(x$alternative,digits=2)," \n")
+# export
+print.powalt <- function(x){
+  cat("\n\tPower for Small Sample Test \n")
+  cat("\tTest type is:",x$test," \n")
+  cat("\tPower is:",x$pow," \n")
+  cat("\tNull is:",formatC(x$null,digits=2),"\n")
+  cat("\tAlt is:",formatC(x$alt,digits=2),"\n")
   cat("\tAlpha is:",x$alpha," \n")
   b <- length(names(x$permutations))-5
   cat("\tNumber of Bins:",b," \n")
   s <- sum(x$permutations[1,2:(1+b)])
-  cat("\tNumber of Observations:",s," \n")
+  cat("\tNumber of Observations:",s,"\n\n")
 }
+setMethod("print","PowerSmallSamp",print.powalt)

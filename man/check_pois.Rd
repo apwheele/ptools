@@ -4,16 +4,18 @@
 \alias{check_pois}
 \title{Checks the fit of a Poisson Distribution}
 \usage{
-check_pois(counts, min_val, max_val, pred)
+check_pois(counts, min_val, max_val, pred, silent = FALSE)
 }
 \arguments{
 \item{counts}{vector of counts, e.g. c(0,5,1,3,4,6)}
 
-\item{min_val}{scaler minimum value to generate the grid of results, e.g. 0)}
+\item{min_val}{scaler minimum value to generate the grid of results, e.g. \code{0}}
 
-\item{max_val}{scaler maximum value to generate the grid of results, e.g. max(counts)}
+\item{max_val}{scaler maximum value to generate the grid of results, e.g. \code{max(counts)}}
 
-\item{pred}{can either be a scaler, e.g. mean(counts), or a vector (e.g. predicted values from a Poisson regression)}
+\item{pred}{can either be a scaler, e.g. \code{mean(counts)}, or a vector (e.g. predicted values from a Poisson regression)}
+
+\item{silent}{boolean, do not print mean/var stat messages, only applies when passing scaler for pred (default \code{FALSE})}
 }
 \value{
 A dataframe with columns
@@ -51,22 +53,25 @@ check_pois(x, 0, 23, ru)
 # If you really want to do a statistical test of fit
 chi_stat <- sum((pfit$Freq - pfit$PoisF)^2/pfit$PoisF)
 df <- length(pfit$Freq) - 2
-dchisq(chi_stat, df) #p-value
+stats::dchisq(chi_stat, df) #p-value
 # I prefer evaluating specific integers though (e.g. zero-inflated, longer-tails, etc.)
 
 # If you want an example with real data, see the WaPo fatal officer involved shootings
-wapo_url <- 'https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/fatal-police-shootings-data.csv'
-oid <- read.csv(wapo_url, stringsAsFactors = F)
+w1 <- 'https://raw.githubusercontent.com/washingtonpost/' #too long url!
+w2 <- 'data-police-shootings/master/fatal-police-shootings-data.csv'
+wapo_url <- paste0(w1,w2)
+oid <- read.csv(wapo_url, stringsAsFactors = FALSE)
 # Now aggregating to count per day
 oid$date_val <- as.Date(oid$date)
-date_range <- paste0(seq(as.Date('2015-01-01'),max(oid$date_val),by='days')) #may be biased low if several recent days with 0
+#may be biased low if several recent days with 0
+date_range <- paste0(seq(as.Date('2015-01-01'),max(oid$date_val),by='days'))
 day_counts <- as.data.frame(table(factor(oid$date,levels=date_range)))
-check_pois(day_counts$Freq, 0, max(day_counts$Freq), mean(day_counts$Freq))
+check_pois(day_counts$Freq, 0, max(day_counts$Freq)+1, mean(day_counts$Freq))
 
 # Example with varying predictions from a model
 day_counts$wd <- weekdays(as.Date(day_counts$Var1))
 mod <- stats::glm(Freq ~ as.factor(wd) - 1, family='poisson', data=day_counts)
 lin_pred <- exp(predict(mod))
-pfit_wd <- check_pois(day_counts$Freq, 0, 10, lin_pred)
+pfit_wd <- check_pois(day_counts$Freq, 0, 11, lin_pred)
 print(pfit_wd)
 }

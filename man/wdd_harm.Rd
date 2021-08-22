@@ -14,6 +14,8 @@ wdd_harm(est, se, weight, alpha = 0.1, silent = FALSE)
 \item{weight}{vector with weights to aggregate results}
 
 \item{alpha}{scaler alpha level for confidence interval (default \code{0.1})}
+
+\item{silent}{boolean, do not print stat messages (default \code{FALSE})}
 }
 \value{
 A length 5 vector with names:

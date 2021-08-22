@@ -27,7 +27,7 @@ test_that("Power Example", {
   r2 <- small_samptest(c(11,0,0,0,0,0,0))
   p2 <- powalt(r2,c(1/4,1/4,1/4,1/4,0,0,0))
   check_pow <- c(0.25,0.58)
-  te_pow <- round(c(p1$power,p2$power),2)
+  te_pow <- round(c(p1$pow,p2$pow),2)
   expect_equal(te_pow, check_pow)
 })
 

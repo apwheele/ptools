@@ -3,9 +3,10 @@
 #' Provides a frequency table to check the fit of a Poisson distribution to empirical data.
 #'
 #' @param counts vector of counts, e.g. c(0,5,1,3,4,6)
-#' @param min_val scaler minimum value to generate the grid of results, e.g. 0)
-#' @param max_val scaler maximum value to generate the grid of results, e.g. max(counts)
-#' @param pred can either be a scaler, e.g. mean(counts), or a vector (e.g. predicted values from a Poisson regression)
+#' @param min_val scaler minimum value to generate the grid of results, e.g. `0`
+#' @param max_val scaler maximum value to generate the grid of results, e.g. `max(counts)`
+#' @param pred can either be a scaler, e.g. `mean(counts)`, or a vector (e.g. predicted values from a Poisson regression)
+#' @param silent boolean, do not print mean/var stat messages, only applies when passing scaler for pred (default `FALSE`)
 #'
 #' @details Given either a scaler mean to test the fit, or a set of predictions (e.g. varying means predicted from a model), checks whether the data fits a given Poisson distribution over a specified set of integers. That is it builds a table of integer counts, and calculates the observed vs the expected distribution according to Poisson. Useful for checking any obvious deviations.
 #' @returns
@@ -36,31 +37,36 @@
 #' # If you really want to do a statistical test of fit
 #' chi_stat <- sum((pfit$Freq - pfit$PoisF)^2/pfit$PoisF)
 #' df <- length(pfit$Freq) - 2
-#' dchisq(chi_stat, df) #p-value
+#' stats::dchisq(chi_stat, df) #p-value
 #' # I prefer evaluating specific integers though (e.g. zero-inflated, longer-tails, etc.)
 #' 
 #' # If you want an example with real data, see the WaPo fatal officer involved shootings
-#' wapo_url <- 'https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/fatal-police-shootings-data.csv'
-#' oid <- read.csv(wapo_url, stringsAsFactors = F)
+#' w1 <- 'https://raw.githubusercontent.com/washingtonpost/' #too long url!
+#' w2 <- 'data-police-shootings/master/fatal-police-shootings-data.csv'
+#' wapo_url <- paste0(w1,w2)
+#' oid <- read.csv(wapo_url, stringsAsFactors = FALSE)
 #' # Now aggregating to count per day
 #' oid$date_val <- as.Date(oid$date)
-#' date_range <- paste0(seq(as.Date('2015-01-01'),max(oid$date_val),by='days')) #may be biased low if several recent days with 0
+#' #may be biased low if several recent days with 0
+#' date_range <- paste0(seq(as.Date('2015-01-01'),max(oid$date_val),by='days'))
 #' day_counts <- as.data.frame(table(factor(oid$date,levels=date_range)))
-#' check_pois(day_counts$Freq, 0, max(day_counts$Freq), mean(day_counts$Freq))
+#' check_pois(day_counts$Freq, 0, max(day_counts$Freq)+1, mean(day_counts$Freq))
 #'
 #' # Example with varying predictions from a model
 #' day_counts$wd <- weekdays(as.Date(day_counts$Var1))
 #' mod <- stats::glm(Freq ~ as.factor(wd) - 1, family='poisson', data=day_counts)
 #' lin_pred <- exp(predict(mod))
-#' pfit_wd <- check_pois(day_counts$Freq, 0, 10, lin_pred)
+#' pfit_wd <- check_pois(day_counts$Freq, 0, 11, lin_pred)
 #' print(pfit_wd)
 
-check_pois <- function(counts,min_val,max_val,pred){
+check_pois <- function(counts,min_val,max_val,pred,silent=FALSE){
    freqN <- as.data.frame(table(factor(counts,levels=min_val:max_val)))
    mu <- pred #mean(counts)
    if(length(mu) == 1){
-       print( paste0('mean: ', mean(counts)) )
-       print( paste0('variance: ',var(counts)) )
+       if (!silent){
+           cat( paste0('\n\tmean: ', mean(counts)) )
+           cat( paste0('\tvariance: ',stats::var(counts),'\n') )
+       }
        PoisD <- stats::dpois(min_val:max_val,mu)
    }
    else{
@@ -72,12 +78,12 @@ check_pois <- function(counts,min_val,max_val,pred){
    } 
    freqN$PoisF <- PoisD*length(counts)
    freqN$ResidF <- (freqN$Freq  - freqN$PoisF)
-   freqN$Prop <- (freqN$Freq/sum(freqN$Freq))*100
+   freqN$Prop <- (freqN$Freq/sum(counts))*100
    freqN$PoisD <- PoisD*100
    freqN$ResidD <- (freqN$Prop - freqN$PoisD)
    freqN$Var1 <- as.numeric(as.character(freqN$Var1))
    names(freqN)[1] <- 'Int'
-   return(freqN)   
+   return(freqN)
 }
 
 ######################

@@ -6,6 +6,7 @@
 #' @param se vector with standard errors for WDD estimates
 #' @param weight vector with weights to aggregate results
 #' @param alpha scaler alpha level for confidence interval (default `0.1`)
+#' @param silent boolean, do not print stat messages (default `FALSE`)
 #'
 #' @details This test combines multiple wdd estimates with different weights. Created to [combine tests for crime harm weights](https://andrewpwheeler.com/2020/11/19/amending-the-wdd-test-to-incorporate-harm-weights/).
 #' @returns

@@ -1,6 +1,6 @@
 Package: ptools
 Title: Tools for Poisson Data
-Version: 0.0.0.9000
+Version: 0.0.0.1000
 Authors@R: 
     person(given = "Andrew",
            family = "Wheeler",
@@ -19,7 +19,8 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     partitions,
+    sp,
     stats,
-    sp
+    methods
 Depends: 
     R (>= 2.10)

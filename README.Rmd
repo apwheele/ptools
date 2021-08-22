@@ -82,11 +82,9 @@ Always feel free to contribute either directly on Github, or email me with thoug
 
 Things on the todo list:
 
- - unit tests
  - github actions
  - Poisson z-score
- - Contours for pre/post Poisson {NYC Data)
- - funnel charts
+ - Contours for pre/post Poisson (NYC Data)
  - SPPT with already aggregated data, SPPT power
  - PAI/RRI functions
  - ?Potentially geo functions?
@@ -94,5 +92,4 @@ Things on the todo list:
   - Theissen helpers
   - HDR raster
   - Near spacetime
-  - Hexagons
   - Leaflet helpers
