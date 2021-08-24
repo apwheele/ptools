@@ -16,7 +16,7 @@ small_samptest(d, p = rep(1/length(d), length(d)), type = "G", cdf = FALSE)
 \item{cdf}{if \code{FALSE} (the default) generates a new permutation vector (using \code{exactProb}), else pass it a final probability dataset previously created}
 }
 \value{
-A SmallSampleTest object with slots for:
+A small_sampletest object with slots for:
 \itemize{
 \item \code{CDF}, a dataframe that contains the exact probabilities and test statistic values for every possible permutation
 \item \code{probabilities}, the null probabilities you specified

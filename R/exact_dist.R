@@ -85,7 +85,7 @@ exactProb <- function(n,m,p=rep(1/m,m),type="G"){
 #' @details
 #' This construct a null distribution for small sample statistics for N counts in M bins. Example use cases are to see if a repeat offender have a proclivity to commit crimes on a particular day of the week (see the referenced paper). It can also be used for Benford's analysis of leading/trailing digits for small samples. Referenced paper shows G test tends to have the most power, although with circular data may consider Kuiper's test.
 #' @returns
-#' A SmallSampleTest object with slots for:
+#' A small_sampletest object with slots for:
 #'  - `CDF`, a dataframe that contains the exact probabilities and test statistic values for every possible permutation
 #'  - `probabilities`, the null probabilities you specified
 #'  - `data`, the observed counts you specified
@@ -151,20 +151,19 @@ small_samptest <- function(d,p=rep(1/length(d),length(d)),type="G",cdf=FALSE){
   Agg$cumprob <- cumsum(Agg$ExactProb)
   pvalue <- sum(Agg[Agg[,'Stat'] >= Samp,'ExactProb'])
   #return object
-  t <- list(cdf,p,d,type,Samp,pvalue,Agg)
-  names(t) <- c("CDF","probabilities","data","test","test_stat","p_value","AggregateStatistics")
-  class(t) <- "SmallSampleTest"
-  return(t)
+  res <- list(cdf,p,d,type,Samp,pvalue,Agg)
+  names(res) <- c("CDF","probabilities","data","test","test_stat","p_value","AggregateStatistics")
+  class(res) <- "small_samptest"
+  return(res)
 }
-
-methods::setClass("SmallSampleTest",slots = c(CDF="data.frame", probabilities="numeric",data="numeric",
+methods::setClass("small_samptest",slots = c(CDF="data.frame", probabilities="numeric",data="numeric",
          test="character",test_stat="numeric",p_value="numeric",AggregateStatistics="data.frame"))
 
 #' Power for Small Sample Exact Test
 #'
 #' A helper function to calculate power for different alternative distributions
 #'
-#' @param SST a SmallSampleTest object created with the small_samptest function
+#' @param SST a small_samptest object created with the small_samptest function
 #' @param p_alt vector of alternative probabilities to calculate power for
 #' @param a scaler, alpha level for power estimate, default 0.05
 #'
@@ -216,18 +215,15 @@ powalt <- function(SST,p_alt,a=.05){
   r <- list(x,pow,p_alt,SST$probabilities,a,SST$test)
   names(r) <- c("permutations","pow","alt","null","alpha","test")
   names(r$permutations)[1] <- names(SST[4])
-  class(r) <- "PowerSmallSamp"
+  class(r) <- "powalt"
   return(r)
 }
-#also see http://stats.stackexchange.com/a/125150/1036
-#for an example of calculating the power under a particular alternative
-
-methods::setClass("PowerSmallSamp",slots = c(permutations="data.frame", pow="numeric", alt="numeric",
+methods::setClass("powalt",slots = c(permutations="data.frame", pow="numeric", alt="numeric",
                   null="numeric",alpha="numeric",test="character"))
 
-#print function for classes need to be exported
-# export
-print.small_samptest <- function(x,...){
+#' @method print small_samptest
+#' @export
+print.small_samptest <- function(x, ...){
   cat("\n\tSmall Sample Test Object \n")
   cat(paste0("\tTest Type is ",x$test," \n"))
   cat(paste0("\tStatistic is: ",x$test_stat," \n"))
@@ -236,10 +232,11 @@ print.small_samptest <- function(x,...){
   cat("\tNull probabilities are: ",formatC(x$probabilities,digits=2),"\n")
   cat("\tTotal permutations are: ",length(x$CDF[,1]),"\n\n")
 }
-setMethod("print","SmallSampleTest",print.small_samptest)
+#methods::setMethod("print","small_samptest",print.small_samptest)
 
-# export
-print.powalt <- function(x){
+#' @method print powalt
+#' @export
+print.powalt <- function(x, ...){
   cat("\n\tPower for Small Sample Test \n")
   cat("\tTest type is:",x$test," \n")
   cat("\tPower is:",x$pow," \n")
@@ -251,4 +248,4 @@ print.powalt <- function(x){
   s <- sum(x$permutations[1,2:(1+b)])
   cat("\tNumber of Observations:",s,"\n\n")
 }
-setMethod("print","PowerSmallSamp",print.powalt)
+#methods::setMethod("print","powalt",print.powalt)

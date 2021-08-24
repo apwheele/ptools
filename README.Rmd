@@ -66,7 +66,7 @@ purch <- c( 72.00,
 fdP <- substr(format(purch,trim=TRUE),1,1)
 totP <- table(factor(fdP, levels=paste(f)))
 resG_P <- small_samptest(d=totP,p=p_fd,type="G")
-print(resG_P)
+print(resG_P) #for now not printing, Rmd not inheriting print function
 ```
 
 Here is an example checking the Poisson fit for a set of data:
@@ -82,14 +82,13 @@ Always feel free to contribute either directly on Github, or email me with thoug
 
 Things on the todo list:
 
- - github actions
  - Poisson z-score
  - Contours for pre/post Poisson (NYC Data)
  - SPPT with already aggregated data, SPPT power
- - PAI/RRI functions
  - ?Potentially geo functions?
   - create grid
   - Theissen helpers
   - HDR raster
   - Near spacetime
   - Leaflet helpers
+  - feature engineering [need to add point data example then]

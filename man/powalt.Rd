@@ -7,7 +7,7 @@
 powalt(SST, p_alt, a = 0.05)
 }
 \arguments{
-\item{SST}{a SmallSampleTest object created with the small_samptest function}
+\item{SST}{a small_samptest object created with the small_samptest function}
 
 \item{p_alt}{vector of alternative probabilities to calculate power for}
 
