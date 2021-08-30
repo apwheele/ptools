@@ -68,7 +68,7 @@ purch <- c( 72.00,
 fdP <- substr(format(purch,trim=TRUE),1,1)
 totP <- table(factor(fdP, levels=paste(f)))
 resG_P <- small_samptest(d=totP,p=p_fd,type="G")
-print(resG_P) #for now not printing, Rmd not inheriting print function
+print(resG_P) # I have a nice print function
 #> 
 #>  Small Sample Test Object 
 #>  Test Type is G 
@@ -82,16 +82,42 @@ print(resG_P) #for now not printing, Rmd not inheriting print function
 Here is an example checking the Poisson fit for a set of data:
 
 ``` r
-x <- stats::rpois(1000,0.5)
+x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 #> 
-#>  mean: 0.516 variance: 0.46621021021021
-#>   Int Freq     PoisF     ResidF       Prop     PoisD     ResidD
-#> 1   0  582 596.90339 -14.903393 112.790698 59.690339 53.1003584
-#> 2   1  330 308.00215  21.997849  63.953488 30.800215 33.1532733
-#> 3   2   78  79.46455  -1.464555  15.116279  7.946455  7.1698236
-#> 4   3   10  13.66790  -3.667903   1.937984  1.366790  0.5711942
+#>  mean: 0.488 variance: 0.466322322322322
+#>   Int Freq     PoisF     ResidF Prop     PoisD      ResidD
+#> 1   0  609 613.85287 -4.8528730 60.9 61.385287 -0.48528730
+#> 2   1  305 299.56020  5.4397980 30.5 29.956020  0.54397980
+#> 3   2   75  73.09269  1.9073107  7.5  7.309269  0.19073107
+#> 4   3   11  11.88974 -0.8897441  1.1  1.188974 -0.08897441
 ```
+
+Here is an example extracting out near repeat strings (this is improved
+version from that blog post using kdtrees):
+
+``` r
+# Not quite 15k rows for burglaries from motor vehicles
+bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
+print(Sys.time()) 
+#> [1] "2021-08-29 20:01:38 EDT"
+BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
+                            y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
+print(head(BigStrings))
+#>             CompId CompNum
+#> 000036-2015      1       1
+#> 000113-2015      2       1
+#> 000192-2015      3       1
+#> 000251-2015      4       1
+#> 000360-2015      5       1
+#> 000367-2015      6       1
+print(Sys.time()) #very fast, only a few seconds on my machine
+#> [1] "2021-08-29 20:01:40 EDT"
+```
+
+ToDo Examples
+
+  - Poison contours
 
 ## Contributing
 
@@ -102,12 +128,11 @@ package directly.
 
 Things on the todo list:
 
-  - Poisson z-score
-  - Contours for pre/post Poisson (NYC Data)
+  - Poisson z-score \[& weekly aggregation\]
   - SPPT with already aggregated data, SPPT power
-  - ?Potentially geo functions?
-  - create grid
-  - Theissen helpers
-  - HDR raster
-  - Near spacetime
-  - Leaflet helpers
+  - Potential geo functions
+      - create grid
+      - Theissen helpers
+      - HDR raster
+      - Leaflet helpers
+      - feature engineering \[need to add point data example then\]

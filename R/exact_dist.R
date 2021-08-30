@@ -178,7 +178,6 @@ methods::setClass("small_samptest",slots = c(CDF="data.frame", probabilities="nu
 #'  - `alpha`, the specified alpha level
 #' @export
 #' @examples
-#' @examples
 #' # Counts for different days of the week
 #' d <- c(3,1,2,0,0,0,0) #format N observations in M bins
 #' res <- small_samptest(d=d,type="G")

@@ -57,16 +57,16 @@
 #' Wheeler, A. P., & Steenbeek, W. (2021). Mapping the risk terrain for crime using machine learning. *Journal of Quantitative Criminology*, 37(2), 445-480.
 #' @seealso 
 #' [pai_summary()] for a summary table of metrics for multiple pai tables given fixed N thresholds
-pai <- function(dat,crime,pred,area,other=c()){
-    LimData <- dat[,c(crime,pred,area,other)]
+pai <- function(dat,count,pred,area,other=c()){
+    LimData <- dat[,c(count,pred,area,other)]
     p <- LimData[,pred]/LimData[,area] #sorts by the highest density
-    cr <- LimData[,crime]
+    cr <- LimData[,count]
     LimData <- LimData[order(p,-1*cr, decreasing = TRUE),] #sorting asc for cr gives min potential PAI
     LimData$Order <- 1:nrow(LimData)
-    LimData$Count <- LimData[,crime]
-    LimData$CumCount <- cumsum(LimData[,crime])
+    LimData$Count <- LimData[,count]
+    LimData$CumCount <- cumsum(LimData[,count])
     tot_area <- sum(LimData[,area])
-    tot_crime <- sum(LimData[,crime])
+    tot_crime <- sum(LimData[,count])
     LimData$Area <- LimData[,area]
     LimData$CumArea <- cumsum(LimData$Area)
     LimData$PCumArea <- LimData$CumArea/tot_area
@@ -145,7 +145,7 @@ pai_summary <- function(pai_list,thresh,labs,wide=TRUE){
     combo_sub <- combo[combo$Order %in% thresh,keep_vars]
     # If wide return in wide format
     if (wide){
-        cs <- reshape(combo_sub,idvar='Order',timevar = 'lab',direction='wide')
+        cs <- stats::reshape(combo_sub,idvar='Order',timevar = 'lab',direction='wide')
     }
     else { cs <- combo_sub } #Else return in long format
     row.names(cs) <- 1:nrow(cs)

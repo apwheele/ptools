@@ -66,15 +66,31 @@ purch <- c( 72.00,
 fdP <- substr(format(purch,trim=TRUE),1,1)
 totP <- table(factor(fdP, levels=paste(f)))
 resG_P <- small_samptest(d=totP,p=p_fd,type="G")
-print(resG_P) #for now not printing, Rmd not inheriting print function
+print(resG_P) # I have a nice print function
 ```
 
 Here is an example checking the Poisson fit for a set of data:
 
 ```{r example4}
-x <- stats::rpois(1000,0.5)
+x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 ```
+
+Here is an example extracting out near repeat strings (this is improved version from that blog post using kdtrees):
+
+```{r example5}
+# Not quite 15k rows for burglaries from motor vehicles
+bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
+print(Sys.time()) 
+BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
+                            y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
+print(head(BigStrings))
+print(Sys.time()) #very fast, only a few seconds on my machine
+```
+
+ToDo Examples
+
+ - Poison contours
 
 ## Contributing
 
@@ -82,13 +98,11 @@ Always feel free to contribute either directly on Github, or email me with thoug
 
 Things on the todo list:
 
- - Poisson z-score
- - Contours for pre/post Poisson (NYC Data)
+ - Poisson z-score [& weekly aggregation]
  - SPPT with already aggregated data, SPPT power
- - ?Potentially geo functions?
-  - create grid
-  - Theissen helpers
-  - HDR raster
-  - Near spacetime
-  - Leaflet helpers
-  - feature engineering [need to add point data example then]
+ - Potential geo functions
+    - create grid
+    - Theissen helpers
+    - HDR raster
+    - Leaflet helpers
+    - feature engineering [need to add point data example then]

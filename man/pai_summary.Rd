@@ -11,7 +11,7 @@ pai_summary(pai_list, thresh, labs, wide = TRUE)
 
 \item{thresh, }{vector of area numbers to select, e.g. 10 would select the top 10 areas, c(10,100) would select the top 10 and the top 100 areas}
 
-\item{labs}{vector of characters that specifies the labels for each PAI dataframe}
+\item{labs}{vector of characters that specifies the labels for each PAI dataframe, should be the same length as \code{pai_list}}
 
 \item{wide}{boolean, if TRUE (default), returns data frame in wide format. Else returns summaries in long format}
 }

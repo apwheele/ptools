@@ -78,7 +78,7 @@ check_pois <- function(counts,min_val,max_val,pred,silent=FALSE){
    } 
    freqN$PoisF <- PoisD*length(counts)
    freqN$ResidF <- (freqN$Freq  - freqN$PoisF)
-   freqN$Prop <- (freqN$Freq/sum(counts))*100
+   freqN$Prop <- (freqN$Freq/sum(freqN$Freq))*100
    freqN$PoisD <- PoisD*100
    freqN$ResidD <- (freqN$Prop - freqN$PoisD)
    freqN$Var1 <- as.numeric(as.character(freqN$Var1))

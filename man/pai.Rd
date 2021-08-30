@@ -4,18 +4,18 @@
 \alias{pai}
 \title{Predictive Accuracy Index}
 \usage{
-pai(dat, crime, pred, area, other = c())
+pai(dat, count, pred, area, other = c())
 }
 \arguments{
 \item{dat}{data frame with the predictions, observed counts, and area sizes (can be a vector of ones)}
+
+\item{count}{character specifying the column name for the observed counts (e.g. the out of sample crime counts)}
 
 \item{pred}{character specifying the column name for the predicted counts (e.g. predictions based on a model)}
 
 \item{area}{character specifying the column name for the area sizes (could also be street segment distances, see Drawve & Wooditch, 2019)}
 
 \item{other}{vector of strings for any other column name you want to keep (e.g. an ID variable), defaults to empty \code{c()}}
-
-\item{count}{character specifying the column name for the observed counts (e.g. the out of sample crime counts)}
 }
 \value{
 A dataframe with the columns:
