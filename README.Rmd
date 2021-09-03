@@ -101,8 +101,6 @@ Things on the todo list:
  - Poisson z-score [& weekly aggregation]
  - SPPT with already aggregated data, SPPT power
  - Potential geo functions
-    - create grid
     - Theissen helpers
     - HDR raster
     - Leaflet helpers
-    - feature engineering [need to add point data example then]
