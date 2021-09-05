@@ -5,7 +5,7 @@
 #'
 #' @param height scaler 
 #'
-#' @details For use with ggplot and `geom_hex` binwidth arguments, which expects arguments in width/height. I want hexagons in maps to be a specific area.
+#' @details For use with ggplot and `geom_hex` binwidth arguments, which expects arguments in width/height. I want hexagons in maps to be a specific area. See [this blog post](https://andrewpwheeler.com/2019/08/07/making-a-hexbin-map-in-ggplot/) for a specific use case with ggplot.
 #' @returns A scaler for the width
 #' @export
 #' @examples
@@ -32,7 +32,7 @@ hex_wd <- function(height){
 #'
 #' @param side scaler 
 #'
-#' @details For use with ggplot and `geom_hex` binwidth arguments, which expects arguments in width/height. I want hexagons in maps to be a specific area.
+#' @details For use with ggplot and `geom_hex` binwidth arguments, which expects arguments in width/height. I want hexagons in maps to be a specific area. See [this blog post](https://andrewpwheeler.com/2019/08/07/making-a-hexbin-map-in-ggplot/) for a specific use case with ggplot.
 #' @returns A scaler for the width
 #' @export
 #' @examples
@@ -55,7 +55,7 @@ hex_area <- function(side){
 #'
 #' @param area scaler 
 #'
-#' @details For use with ggplot and `geom_hex` binwidth arguments, which expects arguments in width/height. I want hexagons in maps to be a specific area.
+#' @details For use with ggplot and `geom_hex` binwidth arguments, which expects arguments in width/height. I want hexagons in maps to be a specific area. See [this blog post](https://andrewpwheeler.com/2019/08/07/making-a-hexbin-map-in-ggplot/) for a specific use case with ggplot.
 #' @returns a vector with two elements, first element is the height (vertex to vertex), the second element is the width (side to side)
 #' @export
 #' @examples

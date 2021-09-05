@@ -16,7 +16,7 @@ A scaler for the width
 Get width of hexagon given height
 }
 \details{
-For use with ggplot and \code{geom_hex} binwidth arguments, which expects arguments in width/height. I want hexagons in maps to be a specific area.
+For use with ggplot and \code{geom_hex} binwidth arguments, which expects arguments in width/height. I want hexagons in maps to be a specific area. See \href{https://andrewpwheeler.com/2019/08/07/making-a-hexbin-map-in-ggplot/}{this blog post} for a specific use case with ggplot.
 }
 \examples{
 area_check <- 1000

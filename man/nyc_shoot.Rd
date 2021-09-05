@@ -5,7 +5,7 @@
 \alias{nyc_shoot}
 \title{NYPD Open Data on Shootings}
 \format{
-A data frame with currently over 20k rows and 21 fields, including date/time and address level geocoordinates for the event. Data from 2006 to currently. See the info on Socrata for the field name codebook.
+A SpatialPointsDataFrame with currently over 20k rows and 21 fields, including date/time and address level geocoordinates for the event. Data from 2006 to currently. See the info on Socrata for the field name codebook.
 }
 \source{
 \itemize{

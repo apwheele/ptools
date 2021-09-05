@@ -85,24 +85,29 @@ Here is an example checking the Poisson fit for a set of data:
 x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 #> 
-#>  mean: 0.488 variance: 0.466322322322322
-#>   Int Freq     PoisF     ResidF Prop     PoisD      ResidD
-#> 1   0  609 613.85287 -4.8528730 60.9 61.385287 -0.48528730
-#> 2   1  305 299.56020  5.4397980 30.5 29.956020  0.54397980
-#> 3   2   75  73.09269  1.9073107  7.5  7.309269  0.19073107
-#> 4   3   11  11.88974 -0.8897441  1.1  1.188974 -0.08897441
+#>  mean: 0.466 variance: 0.469313313313313
+#>   Int Freq      PoisF     ResidF Prop      PoisD      ResidD
+#> 1   0  628 627.507284  0.4927160 62.8 62.7507284  0.04927160
+#> 2   1  293 292.418394  0.5816056 29.3 29.2418394  0.05816056
+#> 3   2   65  68.133486 -3.1334859  6.5  6.8133486 -0.31334859
+#> 4   3   13  10.583401  2.4165985  1.3  1.0583401  0.24165985
+#> 5   4    1   1.232966 -0.2329663  0.1  0.1232966 -0.02329663
 ```
 
-Here is an example extracting out near repeat strings (this is improved
-version from that blog post using kdtrees):
+Here is an example extracting out near repeat strings (this is an
+improved version [from a blog
+post](https://andrewpwheeler.com/2017/04/12/identifying-near-repeat-crime-strings-in-r-or-python/),
+where this function uses kdtrees and should be much more memory safe):
 
 ``` r
 # Not quite 15k rows for burglaries from motor vehicles
 bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
 print(Sys.time()) 
-#> [1] "2021-08-29 20:01:38 EDT"
+#> [1] "2021-09-01 19:59:02 EDT"
 BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
+print(Sys.time()) #very fast, only a few seconds on my machine
+#> [1] "2021-09-01 19:59:04 EDT"
 print(head(BigStrings))
 #>             CompId CompNum
 #> 000036-2015      1       1
@@ -111,13 +116,11 @@ print(head(BigStrings))
 #> 000251-2015      4       1
 #> 000360-2015      5       1
 #> 000367-2015      6       1
-print(Sys.time()) #very fast, only a few seconds on my machine
-#> [1] "2021-08-29 20:01:40 EDT"
 ```
 
 ToDo Examples
 
-  - Poison contours
+  - Poisson contours
 
 ## Contributing
 

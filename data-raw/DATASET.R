@@ -1,5 +1,9 @@
 ## code to prepare datasets
 
+# NYC projection 
+#pr <- "+proj=lcc +lat_0=40.1666666666667 +lon_0=-74 +lat_1=40.6666666666667 +lat_2=41.0333333333333 +x_0=300000 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=us-ft +no_defs"
+pr <- "+proj=lcc +lat_0=40.1666666666667 +lon_0=-74 +lat_1=40.6666666666667 +lat_2=41.0333333333333 +x_0=300000 +y_0=0 +datum=NAD83 +units=us-ft +no_defs"
+
 prep_nyc_shootings <- function(){
     curr_url <- 'https://data.cityofnewyork.us/api/views/5ucz-vwe8/rows.csv?accessType=DOWNLOAD'
     hist_url <- 'https://data.cityofnewyork.us/api/views/833y-fsy8/rows.csv?accessType=DOWNLOAD'
@@ -29,14 +33,17 @@ prep_nyc_shootings <- function(){
     }
     # dropping fields
     drop_fields <- c('Lon_Lat')
-    keep_fields <- names(nyc_shoot)[!(names(nyc_shoot) %in% drop_fields)]
+    keep_fields <- names(shooting)[!(names(shooting) %in% drop_fields)]
     # Maybe do a nice table/map to make sure no funny business
     #MoYr <- format(shooting$OCCUR_DATE, "%Y-%m")
     Year <- format(shooting$OCCUR_DATE,"%Y")
     print("Shootings per Year as a quick data check")
     print(as.data.frame(table(Year)))
     #print(as.data.frame(table(MoYr)))
-    return(shooting[,keep_fields])
+    # Creating a spatial points data frame
+    res <- shooting[,keep_fields]
+    sp_res <- sp::SpatialPointsDataFrame(res[,coord_fields],data=res,proj4string=sp::CRS(pr))
+    return(sp_res)
 }
 
 nyc_shoot <- prep_nyc_shootings()
@@ -48,16 +55,77 @@ nyc_borough <- function(){
     temp <- tempfile("nybb_21c",fileext = ".zip")
     download.file(bor_url,temp)
     unzip(temp,exdir=path.expand('~/temp'))
-    res_bor <- readOGR(dsn=path.expand('~/temp/nybb_21c/nybb.shp'),layer='nybb')
+    res_bor <- rgdal::readOGR(dsn=path.expand('~/temp/nybb_21c/nybb.shp'),layer='nybb',p4s=pr,verbose=FALSE)
     # Clean up the files
     unlink(temp)
     unlink(path.expand('~/temp/nybb_21c'),recursive=TRUE,force=TRUE)
-    # Simplifying the boundary a bit
+    # Simplifying the boundary a bit to make file smaller
     nyc_simpler <- rgeos::gSimplify(res_bor, 500, topologyPreserve=TRUE)
     return(nyc_simpler)
 }
 
 nyc_bor <- nyc_borough()
-plot(nyc_bor) # To check
-points(nyc_shoot$X_COORD_CD,nyc_shoot$Y_COORD_CD,pch='.')
 usethis::use_data(nyc_bor, overwrite = TRUE)
+
+# Liquor Stores in NYC
+liquor_bor <- function(outline){
+    li_url <- "https://data.ny.gov/api/views/hrvs-fxs2/rows.csv?accessType=DOWNLOAD"
+    liq <- read.csv(li_url,stringsAsFactors=FALSE)
+    # Get rid of those without geo
+    liq <- liq[liq$Georeference != "",]
+    # Creating numeric Lon/Lat coordinates
+    s1 <- gsub("POINT (","",liq$Georeference,fixed=TRUE)
+    s2 <- gsub(")","",s1,fixed=TRUE)
+    s3 <- do.call(rbind,strsplit(s2," "))
+    liq$lon <- as.numeric(s3[,1])
+    liq$lat <- as.numeric(s3[,2])
+    # Projectiong to local
+    proj_nyc <- proj4::project(as.matrix(liq[,c('lon','lat')]), proj=pr)
+    liq$x <- proj_nyc[,1]
+    liq$y <- proj_nyc[,2]
+    # I don't need a bunch of these columns
+    # "Method.of.Operation","Premise.Name" (need to clean up unicode)
+    keep_cols <- c("Serial.Number","lon","lat","x","y")
+    liq <- liq[,keep_cols]
+    #liq$Method.of.Operation <- as.factor(liq$Method.of.Operation)
+    # Turning into a spatial data frame
+    liq_sp <- sp::SpatialPointsDataFrame(liq[,c("x","y")],data=liq,proj4string=sp::CRS(pr))
+    # Note some of these are headquarters, so not the actual selling premise
+    #plot(liq_sp)
+    # Getting those over NYC boroughs (outline)
+    liq_sp_nyc <- liq_sp[outline,]
+    return(liq_sp_nyc)
+}
+
+#nyc_bor@proj4string@projargs
+
+nyc_liq <- liquor_bor(nyc_bor)
+usethis::use_data(nyc_liq, overwrite = TRUE)
+
+# Sidewalk Cafes in nyc
+side_cafe <- function(outline){
+    url <- "https://data.cityofnewyork.us/api/views/qcdj-rwhu/rows.csv?accessType=DOWNLOAD"
+    side_cafe <- read.csv(url,stringsAsFactors=FALSE)
+    # only worrying about active
+    side_cafe <- side_cafe[side_cafe$LIC_STATUS == 'Active',]
+    side_cafe <- side_cafe[,c('LICENSE_NBR','BUSINESS_NAME','SWC_SQ_FT','SWC_TABLES','SWC_CHAIRS',
+                              'LATITUDE','LONGITUDE')]
+    #side_cafe$LIC_STATUS <- as.factor(side_cafe$LIC_STATUS)
+    proj_nyc <- proj4::project(as.matrix(side_cafe[,c('LONGITUDE','LATITUDE')]), proj=pr)
+    side_cafe$x <- proj_nyc[,1]
+    side_cafe$y <- proj_nyc[,2]
+    # Getting rid of points duplicated at same location
+    side_cafe <- side_cafe[!duplicated(side_cafe[,c('x','y')]),]
+    cafe_sp <- sp::SpatialPointsDataFrame(side_cafe[,c("x","y")],data=side_cafe,proj4string=sp::CRS(pr))
+    return(cafe_sp[outline,])
+}
+
+nyc_cafe <- side_cafe(nyc_bor)
+usethis::use_data(nyc_cafe, overwrite = TRUE)
+
+#plot(nyc_bor) # To check everything is good
+#plot(nyc_shoot,add=TRUE,pch='.')
+
+# This should just show the outline pretty well
+#plot(nyc_liq)
+#plot(nyc_cafe) #currently none in Staten Island

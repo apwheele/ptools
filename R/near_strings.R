@@ -30,22 +30,21 @@
 #' res1 <- near_strings1(dat,'id','x','y','ti',2,1)
 #' print(res1)
 #' 
-#' # If you want to see a larger example, from Dallas Data
-#' bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
-#' print(Sys.time()) 
-#' BigStrings <- near_strings1(dat=bmv,id='incidentnu',x='xcoordinat',
-#'                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-#' print(Sys.time()) #takes around 10 seconds on my machine
+#' #Full nyc_shoot data with this function takes ~40 seconds
+#' library(sp)
+#' data(nyc_shoot)
+#' nyc_shoot$id <- 1:nrow(nyc_shoot) #incident ID can have dups
+#' mh <- nyc_shoot[nyc_shoot$BORO == 'MANHATTAN',]
+#' print(Sys.time())
+#' res <- near_strings1(mh@data,id='id',x='X_COORD_CD',y='Y_COORD_CD',
+#'                       tim='OCCUR_DATE',DistThresh=1500,TimeThresh=3)
+#' print(Sys.time()) #3k shootings takes only ~1 second on my machine
 #'
-#' ## Not run, but takes around 12 minutes for me
-#' #print(Sys.time())
-#' #FullStrings <- near_strings1(dat=bmv,id='incidentnu',x='xcoordinat',
-#' #                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-#' #print(Sys.time())
 #'
 #' @seealso [near_strings2()], which uses kdtrees, so should be faster with larger data frames, although still may run out of memory, and is not 100% guaranteed to return all nearby strings.
 #' @references
 #' Wheeler, A. P., Riddell, J. R., & Haberman, C. P. (2021). Breaking the chain: How arrests reduce the probability of near repeat crimes. *Criminal Justice Review*, 46(2), 236-258.
+#' 
 near_strings1 <- function(dat,id,x,y,tim,DistThresh,TimeThresh){
   MyData <- dat[,c(id,x,y,tim)]
   # Double loop
@@ -125,24 +124,19 @@ pairs_nn2 <- function(nn2){
 #' res1 <- near_strings2(dat,'id','x','y','ti',2,1)
 #' print(res1)
 #' 
-#' # If you want to see a larger example, from Dallas Data
-#' bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
-#' print(Sys.time()) 
-#' BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
-#'                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-#' print(Sys.time()) #very fast
-#'
-#' ## Not run, but takes around 2 minutes for me
-#' #big_bmv <- rbind(bmv,bmv,bmv,bmv,bmv,bmv,bmv) #duplicating data so around 100k rows
-#' #big_bmv$id <- 1:nrow(big_bmv)
-#' #print(Sys.time())
-#' #FullStrings <- near_strings2(dat=big_bmv,id='id',x='xcoordinat',
-#' #                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-#' #print(Sys.time()) #takes around 
+#' # This runs faster than near_strings1
+#' library(sp)
+#' nyc_shoot$id <- 1:nrow(nyc_shoot)  #incident ID can have dups
+#' print(Sys.time())
+#' res <- near_strings2(nyc_shoot@data,id='id',x='X_COORD_CD',y='Y_COORD_CD',
+#'                      tim='OCCUR_DATE',DistThresh=1500,TimeThresh=3)
+#' print(Sys.time()) #around 4 seconds on my machine
+#' head(res)
 #'
 #' @seealso [near_strings1()], which uses loops but is guaranteed to get all pairs of cases and should be memory safe.
 #' @references
 #' Wheeler, A. P., Riddell, J. R., & Haberman, C. P. (2021). Breaking the chain: How arrests reduce the probability of near repeat crimes. *Criminal Justice Review*, 46(2), 236-258.
+#' 
 near_strings2 <- function(dat,id,x,y,tim,DistThresh,TimeThresh,k=300,eps=0.0001){
     MyData <- dat
     # min neighbors

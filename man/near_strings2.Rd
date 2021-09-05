@@ -53,20 +53,14 @@ dat <- data.frame(x=1:5,y=0,
 res1 <- near_strings2(dat,'id','x','y','ti',2,1)
 print(res1)
 
-# If you want to see a larger example, from Dallas Data
-bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
-print(Sys.time()) 
-BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
-                            y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-print(Sys.time()) #very fast
-
-## Not run, but takes around 2 minutes for me
-#big_bmv <- rbind(bmv,bmv,bmv,bmv,bmv,bmv,bmv) #duplicating data so around 100k rows
-#big_bmv$id <- 1:nrow(big_bmv)
-#print(Sys.time())
-#FullStrings <- near_strings2(dat=big_bmv,id='id',x='xcoordinat',
-#                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-#print(Sys.time()) #takes around 
+# This runs faster than near_strings1
+library(sp)
+nyc_shoot$id <- 1:nrow(nyc_shoot)  #incident ID can have dups
+print(Sys.time())
+res <- near_strings2(nyc_shoot@data,id='id',x='X_COORD_CD',y='Y_COORD_CD',
+                     tim='OCCUR_DATE',DistThresh=1500,TimeThresh=3)
+print(Sys.time()) #around 4 seconds on my machine
+head(res)
 
 }
 \references{

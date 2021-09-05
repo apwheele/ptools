@@ -58,7 +58,6 @@
 #' lin_pred <- exp(predict(mod))
 #' pfit_wd <- check_pois(day_counts$Freq, 0, 11, lin_pred)
 #' print(pfit_wd)
-
 check_pois <- function(counts,min_val,max_val,pred,silent=FALSE){
    freqN <- as.data.frame(table(factor(counts,levels=min_val:max_val)))
    mu <- pred #mean(counts)

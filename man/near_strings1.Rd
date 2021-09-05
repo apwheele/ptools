@@ -48,18 +48,16 @@ dat <- data.frame(x=1:5,y=0,
 res1 <- near_strings1(dat,'id','x','y','ti',2,1)
 print(res1)
 
-# If you want to see a larger example, from Dallas Data
-bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
-print(Sys.time()) 
-BigStrings <- near_strings1(dat=bmv,id='incidentnu',x='xcoordinat',
-                            y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-print(Sys.time()) #takes around 10 seconds on my machine
+#Full nyc_shoot data with this function takes ~40 seconds
+library(sp)
+data(nyc_shoot)
+nyc_shoot$id <- 1:nrow(nyc_shoot) #incident ID can have dups
+mh <- nyc_shoot[nyc_shoot$BORO == 'MANHATTAN',]
+print(Sys.time())
+res <- near_strings1(mh@data,id='id',x='X_COORD_CD',y='Y_COORD_CD',
+                      tim='OCCUR_DATE',DistThresh=1500,TimeThresh=3)
+print(Sys.time()) #3k shootings takes only ~1 second on my machine
 
-## Not run, but takes around 12 minutes for me
-#print(Sys.time())
-#FullStrings <- near_strings1(dat=bmv,id='incidentnu',x='xcoordinat',
-#                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-#print(Sys.time())
 
 }
 \references{
