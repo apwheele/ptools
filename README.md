@@ -85,29 +85,29 @@ Here is an example checking the Poisson fit for a set of data:
 x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 #> 
-#>  mean: 0.466 variance: 0.469313313313313
+#>  mean: 0.532 variance: 0.533509509509509
 #>   Int Freq      PoisF     ResidF Prop      PoisD      ResidD
-#> 1   0  628 627.507284  0.4927160 62.8 62.7507284  0.04927160
-#> 2   1  293 292.418394  0.5816056 29.3 29.2418394  0.05816056
-#> 3   2   65  68.133486 -3.1334859  6.5  6.8133486 -0.31334859
-#> 4   3   13  10.583401  2.4165985  1.3  1.0583401  0.24165985
-#> 5   4    1   1.232966 -0.2329663  0.1  0.1232966 -0.02329663
+#> 1   0  589 587.428936  1.5710638 58.9 58.7428936  0.15710638
+#> 2   1  310 312.512194 -2.5121940 31.0 31.2512194 -0.25121940
+#> 3   2   82  83.128244 -1.1282436  8.2  8.3128244 -0.11282436
+#> 4   3   18  14.741409  3.2585915  1.8  1.4741409  0.32585915
+#> 5   4    1   1.960607 -0.9606073  0.1  0.1960607 -0.09606073
 ```
 
-Here is an example extracting out near repeat strings (this is an
-improved version [from a blog
-post](https://andrewpwheeler.com/2017/04/12/identifying-near-repeat-crime-strings-in-r-or-python/),
-where this function uses kdtrees and should be much more memory safe):
+Here is an example extracting out near repeat strings (this is improved
+version [from an old blog
+post](https://andrewpwheeler.com/2017/04/12/identifying-near-repeat-crime-strings-in-r-or-python/)
+using kdtrees):
 
 ``` r
 # Not quite 15k rows for burglaries from motor vehicles
 bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
 print(Sys.time()) 
-#> [1] "2021-09-01 19:59:02 EDT"
+#> [1] "2021-10-30 09:24:13 EDT"
 BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
 print(Sys.time()) #very fast, only a few seconds on my machine
-#> [1] "2021-09-01 19:59:04 EDT"
+#> [1] "2021-10-30 09:24:14 EDT"
 print(head(BigStrings))
 #>             CompId CompNum
 #> 000036-2015      1       1
@@ -118,10 +118,6 @@ print(head(BigStrings))
 #> 000367-2015      6       1
 ```
 
-ToDo Examples
-
-  - Poisson contours
-
 ## Contributing
 
 Always feel free to contribute either directly on Github, or email me
@@ -131,11 +127,9 @@ package directly.
 
 Things on the todo list:
 
-  - Poisson z-score \[& weekly aggregation\]
-  - SPPT with already aggregated data, SPPT power
+  - Tests for spatial feature engineering
+  - Vignettes for spatial feature engineering
+  - Poisson z-score \[& weekly aggregation\] functions
   - Potential geo functions
-      - create grid
-      - Theissen helpers
       - HDR raster
       - Leaflet helpers
-      - feature engineering \[need to add point data example then\]

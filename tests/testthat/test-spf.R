@@ -13,8 +13,6 @@ test_that("prep_grid check", {
   nr <- nrow(resg)
   ch_area <- rep(0.2^2,nrow(resg))
   expect_equal(raster::area(resg),ch_area)
-  # ?some grid outside? -- need a different baseline shape
-  r2 <- 
   # single point, only should have 1 grid cell
   x1 <- c(0.5); y1 <- c(0.5)
   op <- sp::SpatialPointsDataFrame(cbind(x1,y1), data=data.frame(id=1), proj4string = sp::CRS(pr))
@@ -28,7 +26,16 @@ test_that("prep_grid check", {
   expect_gte(min(resc$cover),0.5)
 })
 
+# test hexgrid
+ # all same size
+ # area outside
+ # only 1 point over
+ # only 2 points over
+ 
+
 # test voronoi
+  # input number same as output
+  # cumulative area same as outline area
 
 # test weighting functions
 

@@ -72,6 +72,106 @@ prep_grid <- function(outline, size, clip_level=0, point_over=NULL, point_n=0){
     return(sel_poly)
 }
 
+# How should I expose this function?
+hex_area <- function(side){
+  area <- 6 * (  (sqrt(3)*side^2)/4 )
+  return(area)
+}
+
+#' Creates hexagon grid cells over study area
+#'
+#' Creates hexagon grid cells of given area over particular study area.
+#'
+#' @param outline SpatialPolygon or SpatialPolygonDataFrame that defines the area to draw hexgrid cells over
+#' @param area scaler for the area of the grid cells in whatever units the outline is in
+#' @param clip_level , you can clip grid cells if they are not entirely inside the outlined area, defaults to `0`
+#' so any cells at least touching are included. Specify as proportion (so should not be greater than 1!)
+#' @param point_over default `NULL`, but can pass in SpatialPoints and will only include grid cells that have at least one point
+#' @param point_n default 0, only used if passing in `point_over`. Will return only grid cells with greater than `point_n` points
+#'
+#' @details This generates a vector hex grid over the study area of interest. Hexgrids are sometimes preferred over square grid cells to  
+#' prevent aliasing like artifacts in maps (runs of particular values).
+#' 
+#' @returns
+#' A SpatialPolygonDataFrame object with columns
+#'  - `id`, integer id value (not the same as row.names!)
+#'  - `x`, x centroid of grid cell
+#'  - `y`, y centroid of grid cell
+#'  - `cover`, optional (only if clip_level > 0) proportion that grid cell is covered by `outline`
+#'  - `count`, optional (only if you pass in `point_over`), total N of points over
+#' @export
+#' @examples
+#' library(sp) #for sp plot methods
+#' #Base example, some barely touch
+#' hnyc <- prep_hexgrid(nyc_bor,area=20000^2)
+#' plot(hnyc)
+#' plot(nyc_bor,border='red',add=TRUE)
+#' #Example clipping hexagons that have dongle hexagons
+#' hex_clip <- prep_hexgrid(nyc_bor,area=20000^2,clip_level=0.3)
+#' plot(hex_clip,border='blue',add=TRUE)
+#' plot(nyc_bor,border='red',add=TRUE)
+#' summary(hnyc)
+#' 
+#' #Example clipping hexagons with no overlap crimes
+#' hnyc <- prep_hexgrid(nyc_bor,area=4000^2,point_over=nyc_shoot)
+#' plot(hnyc)
+#' plot(nyc_shoot,pch='.')
+#'
+#' @references
+#' Circo, G. M., & Wheeler, A. P. (2021). Trauma Center Drive Time Distances and Fatal Outcomes among Gunshot 
+#' Wound Victims. *Applied Spatial Analysis and Policy*, 14(2), 379-393.
+#' 
+prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
+    # Convert area to side
+    dim_hex <- hex_dim(area)
+    # Buffer outline by just over the size
+    width_hex <- dim_hex[2]
+    buff_len <- width_hex*1.1
+    buff <- raster::buffer(outline,buff_len)
+    # Get Hexagon sampling
+    hex_pts <- sp::spsample(buff,cellsize=width_hex,type='hexagonal')
+    hex_pols <- sp::HexPoints2SpatialPolygons(hex_pts)
+    # Get over original
+    hex_orig <- hex_pols[outline,]
+    coord_hex <- sp::coordinates(hex_orig)
+    tot_n <- dim(coord_hex)[1]
+    hex_orig$id <- 1:tot_n #turns into SpatialDataFrame
+    hex_orig$xG <- coord_hex[,1]
+    hex_orig$yG <- coord_hex[,2]
+    hex_orig$area <- area
+    # If you pass in spatial points, also extract those covered
+    # By at least one point (and get counts of points)
+    if (!is.null(point_over)){
+        ch <- sp::over(hex_orig,point_over[,1],fn=length)
+        names(ch) <- 'count'
+        ch[is.na(ch)] <- 0
+        hex_orig$count <- ch
+        # selecing out minimal point number
+        hex_orig <- hex_orig[c(hex_orig$count > point_n),]
+        hex_orig$id <- 1:nrow(hex_orig)
+        last_nm <- length(names(hex_orig))
+        names(hex_orig)[last_nm] <- 'count'
+    }
+    # This is slower, so working second after point clip
+    # But probably want this to be 0 if using point clip
+    # If clip_level > 0, calculate intersection area
+    if (clip_level > 0){
+        # Tiny buffer to fix weird polys and collapse to one
+        buff_tiny <- raster::buffer(outline,0.001)
+        tot_n <- nrow(hex_orig)
+        res_inter <- rep(1,tot_n)
+        for (i in hex_orig$id){
+            inter <- rgeos::gArea(rgeos::gIntersection(hex_orig[i,],buff_tiny))
+            res_inter[i] <- inter/area #proportion
+        }
+        hex_orig$cover <- res_inter
+        # Selecting out area over
+        hex_orig <- hex_orig[c(hex_orig$cover > clip_level),]
+        hex_orig$id <- 1:nrow(hex_orig)
+    }
+    return(hex_orig)
+}
+
 
 #' Distance to nearest based on centroid
 #'
@@ -461,7 +561,8 @@ vor_sp <- function(outline,feat){
     # Convert into spatial polygon (needs ?maptools?)
     sp_object <- methods::as(tess, "SpatialPolygons")
     spdf <- sp::SpatialPolygonsDataFrame(sp_object, feat@data)
-    return(sp_object)
+    sp::proj4string(spdf) <- sp::proj4string(outline)
+    return(spdf)
 }
 
 

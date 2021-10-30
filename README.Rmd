@@ -76,7 +76,7 @@ x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 ```
 
-Here is an example extracting out near repeat strings (this is improved version from that blog post using kdtrees):
+Here is an example extracting out near repeat strings (this is improved version [from an old blog post](https://andrewpwheeler.com/2017/04/12/identifying-near-repeat-crime-strings-in-r-or-python/) using kdtrees):
 
 ```{r example5}
 # Not quite 15k rows for burglaries from motor vehicles
@@ -84,13 +84,9 @@ bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
 print(Sys.time()) 
 BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
-print(head(BigStrings))
 print(Sys.time()) #very fast, only a few seconds on my machine
+print(head(BigStrings))
 ```
-
-ToDo Examples
-
- - Poison contours
 
 ## Contributing
 
@@ -98,9 +94,10 @@ Always feel free to contribute either directly on Github, or email me with thoug
 
 Things on the todo list:
 
- - Poisson z-score [& weekly aggregation]
- - SPPT with already aggregated data, SPPT power
+ - Tests for spatial feature engineering
+ - Vignettes for spatial feature engineering
+ - Poisson z-score [& weekly aggregation] functions
  - Potential geo functions
-    - Theissen helpers
     - HDR raster
     - Leaflet helpers
+
