@@ -169,6 +169,9 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
         hex_orig <- hex_orig[c(hex_orig$cover > clip_level),]
         hex_orig$id <- 1:nrow(hex_orig)
     }
+    # Giving strange x redundant error earlier
+    names(hex_orig)[2] <- "x"
+    names(hex_orig)[3] <- "y"
     return(hex_orig)
 }
 
@@ -551,6 +554,8 @@ idw_xy <- function(base,feat,clip=1,weight=1){
 #' Wheeler, A. P. (2019). Quantifying the local and spatial effects of alcohol outlets on crime. *Crime & Delinquency*, 65(6), 845-871.
 #' 
 vor_sp <- function(outline,feat){
+    #require(maptools)
+    requireNamespace("maptools") 
     # Create the window
     outline_win <- spatstat.geom::as.owin(outline) 
     # Create the spatstat ppp
@@ -560,7 +565,10 @@ vor_sp <- function(outline,feat){
     tess <- spatstat.geom::dirichlet(pp)
     # Convert into spatial polygon (needs ?maptools?)
     sp_object <- methods::as(tess, "SpatialPolygons")
-    spdf <- sp::SpatialPolygonsDataFrame(sp_object, feat@data)
+    f2 <- feat@data #cleaning up the polygon ID
+    pid <- sapply(methods::slot(sp_object, "polygons"), function(x) methods::slot(x, "ID"))
+    row.names(f2) <- pid
+    spdf <- sp::SpatialPolygonsDataFrame(sp_object, f2)
     sp::proj4string(spdf) <- sp::proj4string(outline)
     return(spdf)
 }

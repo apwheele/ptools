@@ -95,8 +95,7 @@ Always feel free to contribute either directly on Github, or email me with thoug
 Things on the todo list:
 
  - Tests for spatial feature engineering
- - Vignettes for spatial feature engineering
- - Poisson z-score [& weekly aggregation] functions
+ - Poisson z-score and weekly aggregation functions
  - Potential geo functions
     - HDR raster
     - Leaflet helpers
