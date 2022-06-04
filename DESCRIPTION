@@ -1,13 +1,14 @@
 Package: ptools
 Title: Tools for Poisson Data
-Version: 0.0.0.1000
+Version: 1.0.0
 Authors@R: 
     person(given = "Andrew",
            family = "Wheeler",
            role = c("aut", "cre"),
            email = "apwheele@gmail.com",
            comment = c(ORCID = "0000-0003-2255-1316"))
-Description: Functions I have used for analyzing count data, mostly crime counts. Includes checking difference in two Poisson counts (e-test), checking the fit for a Poisson distribution. Functions to calculate small sample tests for counts in bins (e.g. days of week, or can be applied to Benfords law). Functions for Wheeler & Ratcliffe's WDD test to evaluate crime changes over time in treated/control areas. Functions for aggregating spatial data and spatial feature engineering.
+Maintainer: Andrew Wheeler <apwheele@gmail.com>
+Description: Functions used for analyzing count data, mostly crime counts. Includes checking difference in two Poisson counts (e-test), checking the fit for a Poisson distribution, small sample tests for counts in bins (e.g. days of week, or can be applied to Benfords law), Wheeler & Ratcliffe's WDD test <doi:10.1186/s40163-018-0085-5> to evaluate crime changes over time in treated/control areas. Additionally includes functions for aggregating spatial data and spatial feature engineering.
 License: MIT + file LICENSE
 URL: https://github.com/apwheele/ptools
 Encoding: UTF-8

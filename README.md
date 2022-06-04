@@ -16,7 +16,7 @@ Hopefully in the future this will be on CRAN, but in the meantime, you
 can install this via devtools:
 
     library(devtools)
-    install_github("apwheele/ptools")
+    install_github("apwheele/ptools", build_vignettes = TRUE)
     library(ptools) # Hopefully works!
 
 ## Examples
@@ -85,12 +85,14 @@ Here is an example checking the Poisson fit for a set of data:
 x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 #> 
-#>  mean: 0.526 variance: 0.527851851851852
-#>   Int Freq     PoisF     ResidF Prop     PoisD     ResidD
-#> 1   0  597 590.96410   6.035895 59.7 59.096410  0.6035895
-#> 2   1  296 310.84712 -14.847119 29.6 31.084712 -1.4847119
-#> 3   2   91  81.75279   9.247208  9.1  8.175279  0.9247208
-#> 4   3   16  14.33399   1.666010  1.6  1.433399  0.1666010
+#>  mean: 0.514 variance: 0.53634034034034
+#>   Int Freq       PoisF     ResidF Prop       PoisD      ResidD
+#> 1   0  603 598.0983941  4.9016059 60.3 59.80983941  0.49016059
+#> 2   1  299 307.4225745 -8.4225745 29.9 30.74225745 -0.84225745
+#> 3   2   84  79.0076017  4.9923983  8.4  7.90076017  0.49923983
+#> 4   3   11  13.5366358 -2.5366358  1.1  1.35366358 -0.25366358
+#> 5   4    1   1.7394577 -0.7394577  0.1  0.17394577 -0.07394577
+#> 6   5    2   0.1788163  1.8211837  0.2  0.01788163  0.18211837
 ```
 
 Here is an example extracting out near repeat strings (this is improved
@@ -102,11 +104,11 @@ using kdtrees):
 # Not quite 15k rows for burglaries from motor vehicles
 bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
 print(Sys.time()) 
-#> [1] "2021-11-02 13:00:03 EDT"
+#> [1] "2022-06-04 08:09:04 EDT"
 BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
 print(Sys.time()) #very fast, only a few seconds on my machine
-#> [1] "2021-11-02 13:00:05 EDT"
+#> [1] "2022-06-04 08:09:05 EDT"
 print(head(BigStrings))
 #>             CompId CompNum
 #> 000036-2015      1       1
