@@ -27,11 +27,11 @@ Both should be projected in the same units. Uses \code{raster::buffer()} on \cod
 }
 \examples{
 data(nyc_cafe); data(nyc_bor)
-gr_nyc <- prep_grid(nyc_bor,3000)
-gr_nyc$dcafe_5k <- dcount_xy(gr_nyc,nyc_cafe,5000)
+gr_nyc <- prep_grid(nyc_bor,6000)
+gr_nyc$dcafe_5k <- dcount_xy(gr_nyc,nyc_cafe,8000)
 #gr_nyc$dtabl_5k <- dcount_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
 head(gr_nyc)
-sp::spplot(gr_nyc,zcol='dcafe_5k') #total tables within 5k feet of grid cell
+#sp::spplot(gr_nyc,zcol='dcafe_8k') #total tables within 8k feet of grid cell
 
 }
 \references{

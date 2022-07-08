@@ -41,7 +41,7 @@ PEI (predictive efficiency index), and the RRI (recovery rate index)
 Given predictions over an entire sample, this returns a dataframe with the sorted best PAI (sorted by density of predicted counts per area).
 PAI is defined as:
 
-\deqn{\text{PAI} = \frac{c_t/C}{a_t/A}}{PAI = (ct/C)/(at/A)}
+\deqn{PAI = \frac{c_t/C}{a_t/A}}{PAI = (ct/C)/(at/A)}
 
 Where the numerator is the percent of crimes in cumulative t areas, and the denominator is the percent of the area encompassed.
 PEI is the observed PAI divided by the best possible PAI if you were a perfect oracle, so is scaled between 0 and 1.

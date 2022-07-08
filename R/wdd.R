@@ -13,7 +13,7 @@
 #'
 #' @details The wdd (weighted displacement difference) test is an extensions to differences-in-differences when observed count data pre/post in treated control areas. The test statistic (ignoring displacement areas and weights) is:
 #' 
-#' \deqn{\text{WDD} = \Delta T - \Delta Ct}{WDD = \Delta T - \Delta Ct}
+#' \deqn{WDD = \Delta T - \Delta Ct}{WDD = \Delta T - \Delta Ct}
 #' where \eqn{\Delta T = T_1 - T_0}{\Delta T = T1 - T0}, the post time period count minus the pre time period count for the treated areas. And ditto for the control areas, Ct. The variance is calculated as:
 #'
 #' \deqn{T_1 + T_0 + Ct_1 + Ct_0}{T1 + T0 + Ct1 + Ct0}

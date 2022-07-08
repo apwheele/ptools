@@ -27,16 +27,17 @@
 #' plot(nyc_bor)
 #' plot(res,border='BLUE',add=TRUE)
 #' 
+#' # Not running, CRAN checks say take too long
 #' # clipping so majority of grid is inside outline
-#' res <- prep_grid(nyc_bor,2000,clip_level=0.5)
-#' plot(nyc_bor)
-#' plot(res,border='BLUE',add=TRUE)
+#' #res <- prep_grid(nyc_bor,2000,clip_level=0.5)
+#' #plot(nyc_bor)
+#' #plot(res,border='BLUE',add=TRUE)
 #' 
 #' # only grid cells that have at least one shooting
-#' data(nyc_shoot)
-#' res <- prep_grid(nyc_bor,2000,clip_level=0,nyc_shoot)
-#' plot(nyc_bor)
-#' plot(res,border='RED',add=TRUE)
+#' #data(nyc_shoot)
+#' #res <- prep_grid(nyc_bor,2000,clip_level=0,nyc_shoot)
+#' #plot(nyc_bor)
+#' #plot(res,border='RED',add=TRUE)
 #'
 #' @references
 #' Wheeler, A. P. (2018). The effect of 311 calls for service on crime in DC at microplaces. *Crime & Delinquency*, 64(14), 1882-1903.
@@ -193,10 +194,10 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
 #' @export
 #' @examples
 #' data(nyc_bor); data(nyc_cafe)
-#' gr_nyc <- prep_grid(nyc_bor,3000,clip_level=0.3)
+#' gr_nyc <- prep_grid(nyc_bor,5000,clip_level=0.3)
 #' gr_nyc$dist_cafe <- dist_xy(gr_nyc,nyc_cafe)
 #' head(gr_nyc)
-#' sp::spplot(gr_nyc,zcol='dist_cafe')
+#' #sp::spplot(gr_nyc,zcol='dist_cafe')
 #' @seealso 
 #' [count_xy()] for counting points inside of base polygon
 #'
@@ -242,11 +243,11 @@ dist_xy <- function(base,feat,bxy=c('x','y'),fxy=c('x','y')){
 #' @export
 #' @examples
 #' data(nyc_liq); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,3000)
+#' gr_nyc <- prep_grid(nyc_bor,5000)
 #' gr_nyc$liq_cnt <- count_xy(gr_nyc,nyc_liq)
-#' gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
+#' #gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
 #' head(gr_nyc)
-#' sp::spplot(gr_nyc,zcol='liq_cnt')
+#' #sp::spplot(gr_nyc,zcol='liq_cnt')
 #' 
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
@@ -289,11 +290,11 @@ count_xy <- function(base,feat,weight=1){
 #' @export
 #' @examples
 #' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,3000)
-#' gr_nyc$dcafe_5k <- dcount_xy(gr_nyc,nyc_cafe,5000)
+#' gr_nyc <- prep_grid(nyc_bor,6000)
+#' gr_nyc$dcafe_5k <- dcount_xy(gr_nyc,nyc_cafe,8000)
 #' #gr_nyc$dtabl_5k <- dcount_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
 #' head(gr_nyc)
-#' sp::spplot(gr_nyc,zcol='dcafe_5k') #total tables within 5k feet of grid cell
+#' #sp::spplot(gr_nyc,zcol='dcafe_8k') #total tables within 8k feet of grid cell
 #' 
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
@@ -350,10 +351,10 @@ kern_fun <- function(d,b,w=1){
 #' @export
 #' @examples
 #' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,3000)
-#' gr_nyc$kdecafe_5k <- kern_xy(gr_nyc,nyc_cafe,5000)
+#' gr_nyc <- prep_grid(nyc_bor,6000)
+#' gr_nyc$kdecafe_5k <- kern_xy(gr_nyc,nyc_cafe,8000)
 #' head(gr_nyc)
-#' sp::spplot(gr_nyc,zcol='kdecafe_5k')
+#' #sp::spplot(gr_nyc,zcol='kdecafe_5k')
 #' 
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
@@ -414,11 +415,11 @@ bisq_fun <- function(d,b){
 #' @export
 #' @examples
 #' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,3000)
-#' gr_nyc$bscafe <- bisq_xy(gr_nyc,nyc_cafe,5000)
-#' gr_nyc$bstabl <- bisq_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
+#' gr_nyc <- prep_grid(nyc_bor,6000)
+#' gr_nyc$bscafe <- bisq_xy(gr_nyc,nyc_cafe,8000)
+#' #gr_nyc$bstabl <- bisq_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
 #' head(gr_nyc)
-#' sp::spplot(gr_nyc,zcol='bscafe') #bisquare weights for cafes
+#' #sp::spplot(gr_nyc,zcol='bscafe') #bisquare weights for cafes
 #' 
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
@@ -481,11 +482,11 @@ idw_fun <- function(d,clip){
 #' @export
 #' @examples
 #' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,3000)
+#' gr_nyc <- prep_grid(nyc_bor,6000)
 #' gr_nyc$idwcafe <- idw_xy(gr_nyc,nyc_cafe)
-#' gr_nyc$idwtabl <- idw_xy(gr_nyc,nyc_cafe,weight='SWC_TABLES')
+#' #gr_nyc$idwtabl <- idw_xy(gr_nyc,nyc_cafe,weight='SWC_TABLES')
 #' head(gr_nyc)
-#' sp::spplot(gr_nyc,zcol='idwtabl') #inverse distance weighted tables
+#' #sp::spplot(gr_nyc,zcol='idwtabl') #inverse distance weighted tables
 #' 
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest

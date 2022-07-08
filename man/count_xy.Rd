@@ -25,11 +25,11 @@ Uses \code{sp::over()} methods in the function.
 }
 \examples{
 data(nyc_liq); data(nyc_bor)
-gr_nyc <- prep_grid(nyc_bor,3000)
+gr_nyc <- prep_grid(nyc_bor,5000)
 gr_nyc$liq_cnt <- count_xy(gr_nyc,nyc_liq)
-gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
+#gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
 head(gr_nyc)
-sp::spplot(gr_nyc,zcol='liq_cnt')
+#sp::spplot(gr_nyc,zcol='liq_cnt')
 
 }
 \references{

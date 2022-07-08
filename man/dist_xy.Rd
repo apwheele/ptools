@@ -28,10 +28,10 @@ use this with spherical coordinates. Useful for feature engineering for crime ge
 }
 \examples{
 data(nyc_bor); data(nyc_cafe)
-gr_nyc <- prep_grid(nyc_bor,3000,clip_level=0.3)
+gr_nyc <- prep_grid(nyc_bor,5000,clip_level=0.3)
 gr_nyc$dist_cafe <- dist_xy(gr_nyc,nyc_cafe)
 head(gr_nyc)
-sp::spplot(gr_nyc,zcol='dist_cafe')
+#sp::spplot(gr_nyc,zcol='dist_cafe')
 }
 \references{
 Caplan, J. M., Kennedy, L. W., & Miller, J. (2011). Risk terrain modeling: Brokering criminological theory and GIS methods for crime forecasting. \emph{Justice Quarterly}, 28(2), 360-381.

@@ -30,11 +30,11 @@ aggregating/weighting feature dataset if it is too slow. Useful for quantifying 
 }
 \examples{
 data(nyc_cafe); data(nyc_bor)
-gr_nyc <- prep_grid(nyc_bor,3000)
+gr_nyc <- prep_grid(nyc_bor,6000)
 gr_nyc$idwcafe <- idw_xy(gr_nyc,nyc_cafe)
-gr_nyc$idwtabl <- idw_xy(gr_nyc,nyc_cafe,weight='SWC_TABLES')
+#gr_nyc$idwtabl <- idw_xy(gr_nyc,nyc_cafe,weight='SWC_TABLES')
 head(gr_nyc)
-sp::spplot(gr_nyc,zcol='idwtabl') #inverse distance weighted tables
+#sp::spplot(gr_nyc,zcol='idwtabl') #inverse distance weighted tables
 
 }
 \references{

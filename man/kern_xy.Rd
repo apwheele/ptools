@@ -28,10 +28,10 @@ for large base + feature datasets (although should be OK memory wise). Consider 
 }
 \examples{
 data(nyc_cafe); data(nyc_bor)
-gr_nyc <- prep_grid(nyc_bor,3000)
-gr_nyc$kdecafe_5k <- kern_xy(gr_nyc,nyc_cafe,5000)
+gr_nyc <- prep_grid(nyc_bor,6000)
+gr_nyc$kdecafe_5k <- kern_xy(gr_nyc,nyc_cafe,8000)
 head(gr_nyc)
-sp::spplot(gr_nyc,zcol='kdecafe_5k')
+#sp::spplot(gr_nyc,zcol='kdecafe_5k')
 
 }
 \references{
