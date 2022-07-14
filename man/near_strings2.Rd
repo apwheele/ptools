@@ -53,14 +53,16 @@ dat <- data.frame(x=1:5,y=0,
 res1 <- near_strings2(dat,'id','x','y','ti',2,1)
 print(res1)
 
+\donttest{
 # This runs faster than near_strings1
-#library(sp)
-#nyc_shoot$id <- 1:nrow(nyc_shoot)  #incident ID can have dups
-#print(Sys.time())
-#res <- near_strings2(nyc_shoot@data,id='id',x='X_COORD_CD',y='Y_COORD_CD',
-#                     tim='OCCUR_DATE',DistThresh=1500,TimeThresh=3)
-#print(Sys.time()) #around 4 seconds on my machine
-#head(res)
+library(sp)
+nyc_shoot$id <- 1:nrow(nyc_shoot)  #incident ID can have dups
+print(Sys.time())
+res <- near_strings2(nyc_shoot@data,id='id',x='X_COORD_CD',y='Y_COORD_CD',
+                     tim='OCCUR_DATE',DistThresh=1500,TimeThresh=3)
+print(Sys.time()) #around 4 seconds on my machine
+head(res)
+}
 
 }
 \references{

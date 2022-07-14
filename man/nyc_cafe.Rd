@@ -10,7 +10,7 @@ includes only active license locations. Current N around 400 and none in Staten 
 }
 \source{
 \itemize{
-\item \url{https://data.cityofnewyork.us/api/views/qcdj-rwhu/rows.csv?accessType=DOWNLOAD}
+\item \url{https://data.cityofnewyork.us/Business/Sidewalk-Caf-Licenses-and-Applications/qcdj-rwhu}
 }
 }
 \usage{

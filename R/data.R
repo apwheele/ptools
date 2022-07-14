@@ -30,7 +30,7 @@
 #' Currently over 18,000 addresses.
 #'
 #' @source 
-#'  - \url{https://data.ny.gov/api/views/hrvs-fxs2/rows.csv?accessType=DOWNLOAD}
+#'  - \url{https://data.ny.gov/Economic-Development/Liquor-Authority-Current-List-of-Active-Licenses/hrvs-fxs2}
 "nyc_liq"
 
 #' NYC Sidewalk Cafes
@@ -41,5 +41,5 @@
 #' includes only active license locations. Current N around 400 and none in Staten Island.
 #'
 #' @source 
-#'  - \url{https://data.cityofnewyork.us/api/views/qcdj-rwhu/rows.csv?accessType=DOWNLOAD}
+#'  - \url{https://data.cityofnewyork.us/Business/Sidewalk-Caf-Licenses-and-Applications/qcdj-rwhu}
 "nyc_cafe"

@@ -32,12 +32,11 @@ aggregating/weighting feature dataset if it is too slow. Useful for quantifying 
 (e.g. spatial smoothing of demographic info, Hipp & Boessen, 2013).
 }
 \examples{
+\donttest{
 data(nyc_cafe); data(nyc_bor)
-gr_nyc <- prep_grid(nyc_bor,6000)
-gr_nyc$bscafe <- bisq_xy(gr_nyc,nyc_cafe,8000)
-#gr_nyc$bstabl <- bisq_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
-head(gr_nyc)
-#sp::spplot(gr_nyc,zcol='bscafe') #bisquare weights for cafes
+gr_nyc <- prep_grid(nyc_bor,10000)
+gr_nyc$bscafe <- bisq_xy(gr_nyc,nyc_cafe,12000)
+}
 
 }
 \references{

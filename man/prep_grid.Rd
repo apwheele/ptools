@@ -43,18 +43,18 @@ res <- prep_grid(nyc_bor,5000)
 plot(nyc_bor)
 plot(res,border='BLUE',add=TRUE)
 
-# Not running, CRAN checks say take too long
+\donttest{
 # clipping so majority of grid is inside outline
-#res <- prep_grid(nyc_bor,2000,clip_level=0.5)
-#plot(nyc_bor)
-#plot(res,border='BLUE',add=TRUE)
+res <- prep_grid(nyc_bor,2000,clip_level=0.5)
+plot(nyc_bor)
+plot(res,border='BLUE',add=TRUE)
 
 # only grid cells that have at least one shooting
-#data(nyc_shoot)
-#res <- prep_grid(nyc_bor,2000,clip_level=0,nyc_shoot)
-#plot(nyc_bor)
-#plot(res,border='RED',add=TRUE)
-
+data(nyc_shoot)
+res <- prep_grid(nyc_bor,2000,clip_level=0,nyc_shoot)
+plot(nyc_bor)
+plot(res,border='RED',add=TRUE)
+}
 }
 \references{
 Wheeler, A. P. (2018). The effect of 311 calls for service on crime in DC at microplaces. \emph{Crime & Delinquency}, 64(14), 1882-1903.

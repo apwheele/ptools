@@ -27,9 +27,11 @@ Uses \code{sp::over()} methods in the function.
 data(nyc_liq); data(nyc_bor)
 gr_nyc <- prep_grid(nyc_bor,5000)
 gr_nyc$liq_cnt <- count_xy(gr_nyc,nyc_liq)
-#gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
-head(gr_nyc)
-#sp::spplot(gr_nyc,zcol='liq_cnt')
+\donttest{
+gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
+head(gr_nyc@data)
+sp::spplot(gr_nyc,zcol='liq_cnt')
+}
 
 }
 \references{

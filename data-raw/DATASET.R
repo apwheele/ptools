@@ -3,6 +3,8 @@
 # NYC projection 
 #pr <- "+proj=lcc +lat_0=40.1666666666667 +lon_0=-74 +lat_1=40.6666666666667 +lat_2=41.0333333333333 +x_0=300000 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=us-ft +no_defs"
 pr <- "+proj=lcc +lat_0=40.1666666666667 +lon_0=-74 +lat_1=40.6666666666667 +lat_2=41.0333333333333 +x_0=300000 +y_0=0 +datum=NAD83 +units=us-ft +no_defs"
+#pr <- sp::CRS("+init=epsg:2908")
+
 
 prep_nyc_shootings <- function(){
     curr_url <- 'https://data.cityofnewyork.us/api/views/5ucz-vwe8/rows.csv?accessType=DOWNLOAD'

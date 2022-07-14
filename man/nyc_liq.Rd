@@ -11,7 +11,7 @@ Currently over 18,000 addresses.
 }
 \source{
 \itemize{
-\item \url{https://data.ny.gov/api/views/hrvs-fxs2/rows.csv?accessType=DOWNLOAD}
+\item \url{https://data.ny.gov/Economic-Development/Liquor-Authority-Current-List-of-Active-Licenses/hrvs-fxs2}
 }
 }
 \usage{

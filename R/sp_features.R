@@ -27,18 +27,19 @@
 #' plot(nyc_bor)
 #' plot(res,border='BLUE',add=TRUE)
 #' 
-#' # Not running, CRAN checks say take too long
+#' \donttest{
 #' # clipping so majority of grid is inside outline
-#' #res <- prep_grid(nyc_bor,2000,clip_level=0.5)
-#' #plot(nyc_bor)
-#' #plot(res,border='BLUE',add=TRUE)
+#' res <- prep_grid(nyc_bor,2000,clip_level=0.5)
+#' plot(nyc_bor)
+#' plot(res,border='BLUE',add=TRUE)
 #' 
 #' # only grid cells that have at least one shooting
-#' #data(nyc_shoot)
-#' #res <- prep_grid(nyc_bor,2000,clip_level=0,nyc_shoot)
-#' #plot(nyc_bor)
-#' #plot(res,border='RED',add=TRUE)
-#'
+#' data(nyc_shoot)
+#' res <- prep_grid(nyc_bor,2000,clip_level=0,nyc_shoot)
+#' plot(nyc_bor)
+#' plot(res,border='RED',add=TRUE)
+#' }
+#
 #' @references
 #' Wheeler, A. P. (2018). The effect of 311 calls for service on crime in DC at microplaces. *Crime & Delinquency*, 64(14), 1882-1903.
 #' 
@@ -107,6 +108,7 @@ hex_area <- function(side){
 #' hnyc <- prep_hexgrid(nyc_bor,area=20000^2)
 #' plot(hnyc)
 #' plot(nyc_bor,border='red',add=TRUE)
+#' \donttest{
 #' #Example clipping hexagons that have dongle hexagons
 #' hex_clip <- prep_hexgrid(nyc_bor,area=20000^2,clip_level=0.3)
 #' plot(hex_clip,border='blue',add=TRUE)
@@ -117,6 +119,7 @@ hex_area <- function(side){
 #' hnyc <- prep_hexgrid(nyc_bor,area=4000^2,point_over=nyc_shoot)
 #' plot(hnyc)
 #' plot(nyc_shoot,pch='.')
+#' }
 #'
 #' @references
 #' Circo, G. M., & Wheeler, A. P. (2021). Trauma Center Drive Time Distances and Fatal Outcomes among Gunshot 
@@ -196,8 +199,11 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
 #' data(nyc_bor); data(nyc_cafe)
 #' gr_nyc <- prep_grid(nyc_bor,5000,clip_level=0.3)
 #' gr_nyc$dist_cafe <- dist_xy(gr_nyc,nyc_cafe)
-#' head(gr_nyc)
-#' #sp::spplot(gr_nyc,zcol='dist_cafe')
+#' head(gr_nyc@data)
+#' \donttest{
+#' sp::spplot(gr_nyc,zcol='dist_cafe')
+#' }
+#'
 #' @seealso 
 #' [count_xy()] for counting points inside of base polygon
 #'
@@ -245,9 +251,11 @@ dist_xy <- function(base,feat,bxy=c('x','y'),fxy=c('x','y')){
 #' data(nyc_liq); data(nyc_bor)
 #' gr_nyc <- prep_grid(nyc_bor,5000)
 #' gr_nyc$liq_cnt <- count_xy(gr_nyc,nyc_liq)
-#' #gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
-#' head(gr_nyc)
-#' #sp::spplot(gr_nyc,zcol='liq_cnt')
+#' \donttest{
+#' gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
+#' head(gr_nyc@data)
+#' sp::spplot(gr_nyc,zcol='liq_cnt')
+#' }
 #' 
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
@@ -291,10 +299,12 @@ count_xy <- function(base,feat,weight=1){
 #' @examples
 #' data(nyc_cafe); data(nyc_bor)
 #' gr_nyc <- prep_grid(nyc_bor,6000)
-#' gr_nyc$dcafe_5k <- dcount_xy(gr_nyc,nyc_cafe,8000)
-#' #gr_nyc$dtabl_5k <- dcount_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
-#' head(gr_nyc)
-#' #sp::spplot(gr_nyc,zcol='dcafe_8k') #total tables within 8k feet of grid cell
+#' gr_nyc$dcafe_8k <- dcount_xy(gr_nyc,nyc_cafe,8000)
+#' \donttest{
+#' gr_nyc$dtabl_5k <- dcount_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
+#' head(gr_nyc@data)
+#' sp::spplot(gr_nyc,zcol='dcafe_8k') #total tables within 8k feet of grid cell
+#' }
 #' 
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
@@ -353,9 +363,11 @@ kern_fun <- function(d,b,w=1){
 #' data(nyc_cafe); data(nyc_bor)
 #' gr_nyc <- prep_grid(nyc_bor,6000)
 #' gr_nyc$kdecafe_5k <- kern_xy(gr_nyc,nyc_cafe,8000)
-#' head(gr_nyc)
-#' #sp::spplot(gr_nyc,zcol='kdecafe_5k')
-#' 
+#' head(gr_nyc@data)
+#' \donttest{
+#' sp::spplot(gr_nyc,zcol='kdecafe_5k')
+#' }
+#'
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
 #' 
@@ -414,13 +426,12 @@ bisq_fun <- function(d,b){
 #' A vector of bi-square weighted sums
 #' @export
 #' @examples
+#' \donttest{
 #' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,6000)
-#' gr_nyc$bscafe <- bisq_xy(gr_nyc,nyc_cafe,8000)
-#' #gr_nyc$bstabl <- bisq_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
-#' head(gr_nyc)
-#' #sp::spplot(gr_nyc,zcol='bscafe') #bisquare weights for cafes
-#' 
+#' gr_nyc <- prep_grid(nyc_bor,10000)
+#' gr_nyc$bscafe <- bisq_xy(gr_nyc,nyc_cafe,12000)
+#' }
+#'
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
 #' 
@@ -484,9 +495,11 @@ idw_fun <- function(d,clip){
 #' data(nyc_cafe); data(nyc_bor)
 #' gr_nyc <- prep_grid(nyc_bor,6000)
 #' gr_nyc$idwcafe <- idw_xy(gr_nyc,nyc_cafe)
-#' #gr_nyc$idwtabl <- idw_xy(gr_nyc,nyc_cafe,weight='SWC_TABLES')
-#' head(gr_nyc)
-#' #sp::spplot(gr_nyc,zcol='idwtabl') #inverse distance weighted tables
+#' \donttest{
+#' gr_nyc$idwtabl <- idw_xy(gr_nyc,nyc_cafe,weight='SWC_TABLES')
+#' head(gr_nyc@data)
+#' sp::spplot(gr_nyc,zcol='idwtabl') #inverse distance weighted tables
+#' }
 #' 
 #' @seealso 
 #' [dist_xy()] for calculating distance to nearest
