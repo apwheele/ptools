@@ -24,12 +24,11 @@ such as \code{dcount_xy()} or \code{count_xy()}. Common spatial unit of analysis
 and street midpoints).
 }
 \examples{
-library(sp) #for plot methods
-library(maptools) #for conversion
+library(sp) # for sample/coordinates
 data(nyc_bor)
 nyc_buff <- raster::buffer(nyc_bor,50000)
 po <- sp::spsample(nyc_buff,50,'hexagonal')
-po$id <- 1:dim(coordinates(po))[1] #turns into SpatialDataFrame
+po$id <- 1:dim(coordinates(po))[1] # turns into SpatialDataFrame
 vo <- vor_sp(nyc_buff,po)
 plot(vo)
 plot(nyc_buff,border='RED',lwd=3, add=TRUE)

@@ -85,13 +85,13 @@ Here is an example checking the Poisson fit for a set of data:
 x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 #> 
-#>  mean: 0.514 variance: 0.508312312312312
+#>  mean: 0.502 variance: 0.482478478478478
 #>   Int Freq      PoisF     ResidF Prop      PoisD      ResidD
-#> 1   0  594 598.098394 -4.0983941 59.4 59.8098394 -0.40983941
-#> 2   1  317 307.422575  9.5774255 31.7 30.7422575  0.95774255
-#> 3   2   72  79.007602 -7.0076017  7.2  7.9007602 -0.70076017
-#> 4   3   15  13.536636  1.4633642  1.5  1.3536636  0.14633642
-#> 5   4    2   1.739458  0.2605423  0.2  0.1739458  0.02605423
+#> 1   0  600 605.318811 -5.3188106 60.0 60.5318811 -0.53188106
+#> 2   1  311 303.870043  7.1299571 31.1 30.3870043  0.71299571
+#> 3   2   77  76.271381  0.7286192  7.7  7.6271381  0.07286192
+#> 4   3   11  12.762744 -1.7627444  1.1  1.2762744 -0.17627444
+#> 5   4    1   1.601724 -0.6017244  0.1  0.1601724 -0.06017244
 ```
 
 Here is an example extracting out near repeat strings (this is improved
@@ -103,11 +103,11 @@ using kdtrees):
 # Not quite 15k rows for burglaries from motor vehicles
 bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
 print(Sys.time()) 
-#> [1] "2022-07-13 08:13:33 EDT"
+#> [1] "2022-07-18 07:04:05 EDT"
 BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
 print(Sys.time()) #very fast, only a few seconds on my machine
-#> [1] "2022-07-13 08:13:34 EDT"
+#> [1] "2022-07-18 07:04:07 EDT"
 print(head(BigStrings))
 #>             CompId CompNum
 #> 000036-2015      1       1

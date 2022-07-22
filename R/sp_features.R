@@ -536,6 +536,87 @@ idw_xy <- function(base,feat,clip=1,weight=1){
 }
 
 
+# These are functions to replace reliance on maptools
+# do not export, no need for namespace inside vor_sp
+# function
+conv_sppoly_ow <- function(SP){
+    if (!is.na(sp::is.projected(SP)) && !sp::is.projected(SP))
+        stop("Only projected coordinates may be converted to spatstat class objects")
+    pls <- methods::slot(SP, "polygons")
+    nParts <- sapply(pls, function(x) length(methods::slot(x, "Polygons")))
+    nOwin <- sum(nParts)
+    if (nOwin == 1) {
+        pl <- methods::slot(pls[[1]], "Polygons")
+        crds <- methods::slot(pl[[1]], "coords")
+        colnames(crds) <- c("x", "y")
+        rD <- pl[[1]]@ringDir
+        if (rD == 1)
+            crds <- crds[nrow(crds):1, ]
+        crds <- crds[-nrow(crds), ]
+        res <- spatstat.geom::owin(poly = list(x = crds[, 1],
+            y = crds[, 2]))
+    }
+    else if (nOwin > 1) {
+        opls <- vector(mode = "list", length = nOwin)
+        io <- 1
+        for (i in seq(along = pls)) {
+            pl <- methods::slot(pls[[i]], "Polygons")
+            for (j in 1:nParts[i]) {
+                crds <- methods::slot(pl[[j]], "coords")
+                colnames(crds) <- c("x", "y")
+                rD <- methods::slot(pl[[j]], "ringDir")
+                hole <- methods::slot(pl[[j]], "hole")
+                if (rD == -1 && hole)
+                  crds <- crds[nrow(crds):1, ]
+                else if (rD == 1 && !hole)
+                  crds <- crds[nrow(crds):1, ]
+                crds <- crds[-nrow(crds), ]
+                opls[[io]] <- list(x = crds[, 1], y = crds[,
+                  2])
+                io <- io + 1
+            }
+        }
+        if (!spatstat.geom::spatstat.options("checkpolygons"))
+            res <- spatstat.geom::owin(sp::bbox(SP)[1, ], sp::bbox(SP)[2,
+                ], poly = opls, check = FALSE)
+        else res <- spatstat.geom::owin(poly = opls)
+    }
+    else stop("no valid polygons")
+    res
+}
+
+
+conv_ow_poly <- function(x, id = "1"){
+    stopifnot(spatstat.geom::is.owin(x))
+    x <- spatstat.geom::as.polygonal(x)
+    closering <- function(df) {
+        df[c(seq(nrow(df)), 1), ]
+    }
+    pieces <- lapply(x$bdry, function(p) {
+        sp::Polygon(coords = closering(cbind(p$x, p$y)), hole = spatstat.utils::is.hole.xypolygon(p))
+    })
+    z <- sp::Polygons(pieces, id)
+    return(z)
+}
+
+conv_sst_sp <- function(x){
+    stopifnot(spatstat.geom::is.tess(x))
+    y <- spatstat.geom::tiles(x)
+    nam <- names(y)
+    z <- list()
+    for (i in seq(y)) {
+        zi <- try(conv_ow_poly(y[[i]], nam[i]), silent = TRUE)
+        if (inherits(zi, "try-error")) {
+            warning(paste("tile", i, "defective\n", as.character(zi)))
+        }
+        else {
+            z[[i]] <- zi
+        }
+    }
+    return(sp::SpatialPolygons(z))
+}
+
+
 #' Voronoi tesselation from input points
 #'
 #' Given an outline and feature points, calculates Voronoi areas
@@ -552,12 +633,11 @@ idw_xy <- function(base,feat,clip=1,weight=1){
 #' A SpatialPolygonsDataFrame object, including the dataframe for all the info in the orignal `feat@data` dataframe.
 #' @export
 #' @examples
-#' library(sp) #for plot methods
-#' library(maptools) #for conversion
+#' library(sp) # for sample/coordinates
 #' data(nyc_bor)
 #' nyc_buff <- raster::buffer(nyc_bor,50000)
 #' po <- sp::spsample(nyc_buff,50,'hexagonal')
-#' po$id <- 1:dim(coordinates(po))[1] #turns into SpatialDataFrame
+#' po$id <- 1:dim(coordinates(po))[1] # turns into SpatialDataFrame
 #' vo <- vor_sp(nyc_buff,po)
 #' plot(vo)
 #' plot(nyc_buff,border='RED',lwd=3, add=TRUE)
@@ -568,17 +648,15 @@ idw_xy <- function(base,feat,clip=1,weight=1){
 #' Wheeler, A. P. (2019). Quantifying the local and spatial effects of alcohol outlets on crime. *Crime & Delinquency*, 65(6), 845-871.
 #' 
 vor_sp <- function(outline,feat){
-    #require(maptools)
-    requireNamespace("maptools") 
     # Create the window
-    outline_win <- spatstat.geom::as.owin(outline) 
+    outline_win <- conv_sppoly_ow(outline) 
     # Create the spatstat ppp
     fxy <- sp::coordinates(feat)
     pp <- spatstat.geom::ppp(fxy[,1], fxy[,2], window=outline_win)
     # Create the tesselation
     tess <- spatstat.geom::dirichlet(pp)
-    # Convert into spatial polygon (needs ?maptools?)
-    sp_object <- methods::as(tess, "SpatialPolygons")
+    # Just making own function, take out maptools dependency
+    sp_object <- conv_sst_sp(tess)
     f2 <- feat@data #cleaning up the polygon ID
     pid <- sapply(methods::slot(sp_object, "polygons"), function(x) methods::slot(x, "ID"))
     row.names(f2) <- pid

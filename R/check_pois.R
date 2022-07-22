@@ -40,6 +40,7 @@
 #' stats::dchisq(chi_stat, df) #p-value
 #' # I prefer evaluating specific integers though (e.g. zero-inflated, longer-tails, etc.)
 #' 
+#' \donttest{
 #' # If you want an example with real data, see the WaPo fatal officer involved shootings
 #' w1 <- 'https://raw.githubusercontent.com/washingtonpost/' #too long url!
 #' w2 <- 'data-police-shootings/master/fatal-police-shootings-data.csv'
@@ -58,6 +59,7 @@
 #' lin_pred <- exp(predict(mod))
 #' pfit_wd <- check_pois(day_counts$Freq, 0, 11, lin_pred)
 #' print(pfit_wd)
+#' }
 check_pois <- function(counts,min_val,max_val,pred,silent=FALSE){
    freqN <- as.data.frame(table(factor(counts,levels=min_val:max_val)))
    mu <- pred #mean(counts)

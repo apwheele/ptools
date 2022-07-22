@@ -1,6 +1,6 @@
 Package: ptools
 Title: Tools for Poisson Data
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person(given = "Andrew",
            family = "Wheeler",
@@ -8,7 +8,7 @@ Authors@R:
            email = "apwheele@gmail.com",
            comment = c(ORCID = "0000-0003-2255-1316"))
 Maintainer: Andrew Wheeler <apwheele@gmail.com>
-Description: Functions used for analyzing count data, mostly crime counts. Includes checking difference in two Poisson counts (e-test), checking the fit for a Poisson distribution, small sample tests for counts in bins, Weighted Displacement Difference test, to evaluate crime changes over time in treated/control areas. Additionally includes functions for aggregating spatial data and spatial feature engineering.
+Description: Functions used for analyzing count data, mostly crime counts. Includes checking difference in two Poisson counts (e-test), checking the fit for a Poisson distribution, small sample tests for counts in bins, Weighted Displacement Difference test (Wheeler and Ratcliffe, 2018) <doi:10.1186/s40163-018-0085-5>, to evaluate crime changes over time in treated/control areas. Additionally includes functions for aggregating spatial data and spatial feature engineering.
 License: MIT + file LICENSE
 URL: https://github.com/apwheele/ptools
 Encoding: UTF-8
@@ -27,8 +27,8 @@ Imports:
     igraph,
     RANN,
     spatstat.geom,
+    spatstat.utils,
     rgeos,
-    maptools,
     stats,
     methods
 Depends: 
