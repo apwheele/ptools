@@ -5,7 +5,7 @@
 \alias{nyc_bor}
 \title{NYC Boroughs}
 \format{
-A SpatialPolygonsDataFrame object of the NYC Boroughs. This is projected (same coordinates as shootings). See the \href{https://www1.nyc.gov/site/planning/data-maps/open-data.page}{Bytes of the Big Apple} for any details on the file.
+A SpatialPolygonsDataFrame object of the NYC Boroughs. This is projected (same coordinates as shootings). See the \href{https://www.nyc.gov/site/planning/data-maps/open-data.page}{Bytes of the Big Apple} for any details on the file.
 }
 \source{
 \itemize{

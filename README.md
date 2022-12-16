@@ -4,7 +4,6 @@
 # ptools
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 The library ptools is a set of helper functions I have used over time to
@@ -85,13 +84,14 @@ Here is an example checking the Poisson fit for a set of data:
 x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 #> 
-#>  mean: 0.502 variance: 0.482478478478478
-#>   Int Freq      PoisF     ResidF Prop      PoisD      ResidD
-#> 1   0  600 605.318811 -5.3188106 60.0 60.5318811 -0.53188106
-#> 2   1  311 303.870043  7.1299571 31.1 30.3870043  0.71299571
-#> 3   2   77  76.271381  0.7286192  7.7  7.6271381  0.07286192
-#> 4   3   11  12.762744 -1.7627444  1.1  1.2762744 -0.17627444
-#> 5   4    1   1.601724 -0.6017244  0.1  0.1601724 -0.06017244
+#>  mean: 0.528 variance: 0.52373973973974
+#>   Int Freq       PoisF     ResidF Prop       PoisD      ResidD
+#> 1   0  586 589.7833576 -3.7833576 58.6 58.97833576 -0.37833576
+#> 2   1  319 311.4056128  7.5943872 31.9 31.14056128  0.75943872
+#> 3   2   79  82.2110818 -3.2110818  7.9  8.22110818 -0.32110818
+#> 4   3   14  14.4691504 -0.4691504  1.4  1.44691504 -0.04691504
+#> 5   4    1   1.9099279 -0.9099279  0.1  0.19099279 -0.09099279
+#> 6   5    1   0.2016884  0.7983116  0.1  0.02016884  0.07983116
 ```
 
 Here is an example extracting out near repeat strings (this is improved
@@ -103,11 +103,11 @@ using kdtrees):
 # Not quite 15k rows for burglaries from motor vehicles
 bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
 print(Sys.time()) 
-#> [1] "2022-07-18 07:04:05 EDT"
+#> [1] "2022-12-15 15:31:19 EST"
 BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
 print(Sys.time()) #very fast, only a few seconds on my machine
-#> [1] "2022-07-18 07:04:07 EDT"
+#> [1] "2022-12-15 15:31:21 EST"
 print(head(BigStrings))
 #>             CompId CompNum
 #> 000036-2015      1       1
@@ -127,8 +127,8 @@ package directly.
 
 Things on the todo list:
 
-  - Tests for spatial feature engineering
-  - Poisson z-score and weekly aggregation functions
-  - Potential geo functions
-      - HDR raster
-      - Leaflet helpers
+-   Tests for spatial feature engineering
+-   Poisson z-score and weekly aggregation functions
+-   Potential geo functions
+    -   HDR raster
+    -   Leaflet helpers

@@ -56,24 +56,4 @@ df <- length(pfit$Freq) - 2
 stats::dchisq(chi_stat, df) #p-value
 # I prefer evaluating specific integers though (e.g. zero-inflated, longer-tails, etc.)
 
-\donttest{
-# If you want an example with real data, see the WaPo fatal officer involved shootings
-w1 <- 'https://raw.githubusercontent.com/washingtonpost/' #too long url!
-w2 <- 'data-police-shootings/master/fatal-police-shootings-data.csv'
-wapo_url <- paste0(w1,w2)
-oid <- read.csv(wapo_url, stringsAsFactors = FALSE)
-# Now aggregating to count per day
-oid$date_val <- as.Date(oid$date)
-#may be biased low if several recent days with 0
-date_range <- paste0(seq(as.Date('2015-01-01'),max(oid$date_val),by='days'))
-day_counts <- as.data.frame(table(factor(oid$date,levels=date_range)))
-check_pois(day_counts$Freq, 0, max(day_counts$Freq)+1, mean(day_counts$Freq))
-
-# Example with varying predictions from a model
-day_counts$wd <- weekdays(as.Date(day_counts$Var1))
-mod <- stats::glm(Freq ~ as.factor(wd) - 1, family='poisson', data=day_counts)
-lin_pred <- exp(predict(mod))
-pfit_wd <- check_pois(day_counts$Freq, 0, 11, lin_pred)
-print(pfit_wd)
-}
 }

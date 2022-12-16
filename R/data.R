@@ -15,7 +15,7 @@
 #'
 #' Spatial file for New York City Borough outlines without water areas
 #'
-#' @format A SpatialPolygonsDataFrame object of the NYC Boroughs. This is projected (same coordinates as shootings). See the [Bytes of the Big Apple](https://www1.nyc.gov/site/planning/data-maps/open-data.page) for any details on the file.
+#' @format A SpatialPolygonsDataFrame object of the NYC Boroughs. This is projected (same coordinates as shootings). See the [Bytes of the Big Apple](https://www.nyc.gov/site/planning/data-maps/open-data.page) for any details on the file.
 #'
 #' @source 
 #'  - \url{https://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/nybb_21c.zip}
