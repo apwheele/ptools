@@ -27,11 +27,11 @@ This uses kd-trees from RANN, so should be reasonably fast. But I do no projecti
 use this with spherical coordinates. Useful for feature engineering for crime generators.
 }
 \examples{
+\donttest{
 data(nyc_bor); data(nyc_cafe)
-gr_nyc <- prep_grid(nyc_bor,5000,clip_level=0.3)
+gr_nyc <- prep_grid(nyc_bor,15000,clip_level=0.3)
 gr_nyc$dist_cafe <- dist_xy(gr_nyc,nyc_cafe)
 head(gr_nyc@data)
-\donttest{
 sp::spplot(gr_nyc,zcol='dist_cafe')
 }
 

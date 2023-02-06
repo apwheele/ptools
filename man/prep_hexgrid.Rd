@@ -36,12 +36,12 @@ This generates a vector hex grid over the study area of interest. Hexgrids are s
 prevent aliasing like artifacts in maps (runs of particular values).
 }
 \examples{
+\donttest{
 library(sp) #for sp plot methods
 #Base example, some barely touch
 hnyc <- prep_hexgrid(nyc_bor,area=20000^2)
 plot(hnyc)
 plot(nyc_bor,border='red',add=TRUE)
-\donttest{
 #Example clipping hexagons that have dongle hexagons
 hex_clip <- prep_hexgrid(nyc_bor,area=20000^2,clip_level=0.3)
 plot(hex_clip,border='blue',add=TRUE)

@@ -24,10 +24,10 @@ This generates a count (or weighted count) of features inside of the base areas.
 Uses \code{sp::over()} methods in the function.
 }
 \examples{
-data(nyc_liq); data(nyc_bor)
-gr_nyc <- prep_grid(nyc_bor,5000)
-gr_nyc$liq_cnt <- count_xy(gr_nyc,nyc_liq)
 \donttest{
+data(nyc_liq); data(nyc_bor)
+gr_nyc <- prep_grid(nyc_bor,10000)
+gr_nyc$liq_cnt <- count_xy(gr_nyc,nyc_liq)
 gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
 head(gr_nyc@data)
 sp::spplot(gr_nyc,zcol='liq_cnt')

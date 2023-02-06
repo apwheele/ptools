@@ -34,7 +34,7 @@ aggregating/weighting feature dataset if it is too slow. Useful for quantifying 
 \examples{
 \donttest{
 data(nyc_cafe); data(nyc_bor)
-gr_nyc <- prep_grid(nyc_bor,10000)
+gr_nyc <- prep_grid(nyc_bor,15000)
 gr_nyc$bscafe <- bisq_xy(gr_nyc,nyc_cafe,12000)
 }
 

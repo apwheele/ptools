@@ -36,6 +36,7 @@ This generates a vector grid over the study area of interest. Intentionally work
 other feature engineering helper functions (that can pass in X/Y).
 }
 \examples{
+\donttest{
 library(sp) #for sp plot methods
 # large grid cells
 data(nyc_bor)
@@ -43,7 +44,6 @@ res <- prep_grid(nyc_bor,5000)
 plot(nyc_bor)
 plot(res,border='BLUE',add=TRUE)
 
-\donttest{
 # clipping so majority of grid is inside outline
 res <- prep_grid(nyc_bor,2000,clip_level=0.5)
 plot(nyc_bor)

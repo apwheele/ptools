@@ -20,6 +20,7 @@
 #'  - `count`, optional (only if you pass in `point_over`)
 #' @export
 #' @examples
+#' \donttest{
 #' library(sp) #for sp plot methods
 #' # large grid cells
 #' data(nyc_bor)
@@ -27,7 +28,6 @@
 #' plot(nyc_bor)
 #' plot(res,border='BLUE',add=TRUE)
 #' 
-#' \donttest{
 #' # clipping so majority of grid is inside outline
 #' res <- prep_grid(nyc_bor,2000,clip_level=0.5)
 #' plot(nyc_bor)
@@ -103,12 +103,12 @@ hex_area <- function(side){
 #'  - `count`, optional (only if you pass in `point_over`), total N of points over
 #' @export
 #' @examples
+#' \donttest{
 #' library(sp) #for sp plot methods
 #' #Base example, some barely touch
 #' hnyc <- prep_hexgrid(nyc_bor,area=20000^2)
 #' plot(hnyc)
 #' plot(nyc_bor,border='red',add=TRUE)
-#' \donttest{
 #' #Example clipping hexagons that have dongle hexagons
 #' hex_clip <- prep_hexgrid(nyc_bor,area=20000^2,clip_level=0.3)
 #' plot(hex_clip,border='blue',add=TRUE)
@@ -196,11 +196,11 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
 #' A vector of distances from base dataset xy to the nearest feature xy
 #' @export
 #' @examples
+#' \donttest{
 #' data(nyc_bor); data(nyc_cafe)
-#' gr_nyc <- prep_grid(nyc_bor,5000,clip_level=0.3)
+#' gr_nyc <- prep_grid(nyc_bor,15000,clip_level=0.3)
 #' gr_nyc$dist_cafe <- dist_xy(gr_nyc,nyc_cafe)
 #' head(gr_nyc@data)
-#' \donttest{
 #' sp::spplot(gr_nyc,zcol='dist_cafe')
 #' }
 #'
@@ -248,10 +248,10 @@ dist_xy <- function(base,feat,bxy=c('x','y'),fxy=c('x','y')){
 #' A vector of counts (or weighted sums)
 #' @export
 #' @examples
-#' data(nyc_liq); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,5000)
-#' gr_nyc$liq_cnt <- count_xy(gr_nyc,nyc_liq)
 #' \donttest{
+#' data(nyc_liq); data(nyc_bor)
+#' gr_nyc <- prep_grid(nyc_bor,10000)
+#' gr_nyc$liq_cnt <- count_xy(gr_nyc,nyc_liq)
 #' gr_nyc$table_cnt <- count_xy(gr_nyc,nyc_cafe,'SWC_TABLES')
 #' head(gr_nyc@data)
 #' sp::spplot(gr_nyc,zcol='liq_cnt')
@@ -297,13 +297,11 @@ count_xy <- function(base,feat,weight=1){
 #' A vector of counts (or weighted sums)
 #' @export
 #' @examples
-#' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,6000)
-#' gr_nyc$dcafe_8k <- dcount_xy(gr_nyc,nyc_cafe,8000)
 #' \donttest{
-#' gr_nyc$dtabl_5k <- dcount_xy(gr_nyc,nyc_cafe,5000,'SWC_TABLES')
+#' data(nyc_cafe); data(nyc_bor)
+#' gr_nyc <- prep_grid(nyc_bor,15000)
+#' gr_nyc$dcafe_8k <- dcount_xy(gr_nyc,nyc_cafe,8000)
 #' head(gr_nyc@data)
-#' sp::spplot(gr_nyc,zcol='dcafe_8k') #total tables within 8k feet of grid cell
 #' }
 #' 
 #' @seealso 
@@ -360,11 +358,11 @@ kern_fun <- function(d,b,w=1){
 #' A vector of densities (or weighted densities)
 #' @export
 #' @examples
+#' \donttest{
 #' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,6000)
+#' gr_nyc <- prep_grid(nyc_bor,15000)
 #' gr_nyc$kdecafe_5k <- kern_xy(gr_nyc,nyc_cafe,8000)
 #' head(gr_nyc@data)
-#' \donttest{
 #' sp::spplot(gr_nyc,zcol='kdecafe_5k')
 #' }
 #'
@@ -428,7 +426,7 @@ bisq_fun <- function(d,b){
 #' @examples
 #' \donttest{
 #' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,10000)
+#' gr_nyc <- prep_grid(nyc_bor,15000)
 #' gr_nyc$bscafe <- bisq_xy(gr_nyc,nyc_cafe,12000)
 #' }
 #'
@@ -492,13 +490,11 @@ idw_fun <- function(d,clip){
 #' A vector of IDW weighted sums
 #' @export
 #' @examples
-#' data(nyc_cafe); data(nyc_bor)
-#' gr_nyc <- prep_grid(nyc_bor,6000)
-#' gr_nyc$idwcafe <- idw_xy(gr_nyc,nyc_cafe)
 #' \donttest{
-#' gr_nyc$idwtabl <- idw_xy(gr_nyc,nyc_cafe,weight='SWC_TABLES')
+#' data(nyc_cafe); data(nyc_bor)
+#' gr_nyc <- prep_grid(nyc_bor,15000)
+#' gr_nyc$idwcafe <- idw_xy(gr_nyc,nyc_cafe)
 #' head(gr_nyc@data)
-#' sp::spplot(gr_nyc,zcol='idwtabl') #inverse distance weighted tables
 #' }
 #' 
 #' @seealso 
@@ -633,14 +629,16 @@ conv_sst_sp <- function(x){
 #' A SpatialPolygonsDataFrame object, including the dataframe for all the info in the orignal `feat@data` dataframe.
 #' @export
 #' @examples
+#' \donttest{
 #' library(sp) # for sample/coordinates
 #' data(nyc_bor)
 #' nyc_buff <- raster::buffer(nyc_bor,50000)
-#' po <- sp::spsample(nyc_buff,50,'hexagonal')
+#' po <- sp::spsample(nyc_buff,20,'hexagonal')
 #' po$id <- 1:dim(coordinates(po))[1] # turns into SpatialDataFrame
 #' vo <- vor_sp(nyc_buff,po)
 #' plot(vo)
 #' plot(nyc_buff,border='RED',lwd=3, add=TRUE)
+#' }
 #' 
 #' @references
 #' Wheeler, A. P. (2018). The effect of 311 calls for service on crime in DC at microplaces. *Crime & Delinquency*, 64(14), 1882-1903.
