@@ -30,6 +30,7 @@ Imports:
     spatstat.utils,
     rgeos,
     terra,
+    sf,
     stats,
     methods
 Depends: 
