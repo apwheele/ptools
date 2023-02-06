@@ -29,6 +29,7 @@ Imports:
     spatstat.geom,
     spatstat.utils,
     rgeos,
+    terra,
     stats,
     methods
 Depends: 
