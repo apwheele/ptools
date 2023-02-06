@@ -57,14 +57,12 @@ nyc_borough <- function(){
     temp <- tempfile("nybb_21c",fileext = ".zip")
     download.file(bor_url,temp)
     unzip(temp,exdir=path.expand('~/temp'))
-    #res_bor <- rgdal::readOGR(dsn=path.expand('~/temp/nybb_21c/nybb.shp'),layer='nybb',p4s=pr,verbose=FALSE)
     shp <- path.expand('~/temp/nybb_21c/nybb.shp')
     res_bor <- terra::vect(shp)
     # Clean up the files
     unlink(temp)
     unlink(path.expand('~/temp/nybb_21c'),recursive=TRUE,force=TRUE)
     # Simplifying the boundary a bit to make file smaller
-    #nyc_simpler <- rgeos::gSimplify(res_bor, 500, topologyPreserve=TRUE)
     nyc_simpler <- terra::simplifyGeom(res_bor, 500)
     nyc_sf <- sf::st_as_sf(nyc_simpler)
     nyc_sp <- sf::as_Spatial(nyc_sf)

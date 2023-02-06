@@ -111,14 +111,14 @@ hex_area <- function(side){
 #' plot(nyc_bor,border='red',add=TRUE)
 #' #Example clipping hexagons that have dongle hexagons
 #' hex_clip <- prep_hexgrid(nyc_bor,area=20000^2,clip_level=0.3)
-#' plot(hex_clip,border='blue',add=TRUE)
+#' plot(hex_clip,border='blue')
 #' plot(nyc_bor,border='red',add=TRUE)
 #' summary(hnyc)
 #' 
 #' #Example clipping hexagons with no overlap crimes
 #' hnyc <- prep_hexgrid(nyc_bor,area=4000^2,point_over=nyc_shoot)
 #' plot(hnyc)
-#' plot(nyc_shoot,pch='.')
+#' plot(nyc_shoot,pch='.',add=TRUE)
 #' }
 #'
 #' @references
@@ -164,8 +164,13 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
         buff_tiny <- raster::buffer(outline,0.001)
         tot_n <- nrow(hex_orig)
         res_inter <- rep(1,tot_n)
+        # For not relying on rgeos, convert to terra
+        hex_sf <- sf::st_as_sf(hex_orig)
+        buff_sf <- sf::st_as_sf(buff_tiny)
         for (i in hex_orig$id){
-            inter <- rgeos::gArea(rgeos::gIntersection(hex_orig[i,],buff_tiny))
+            intpol <- terra::intersect(hex_sf[i,],buff_sf)
+            inter <- sf::st_area(intpol)
+            inter <- methods::as(inter,"numeric")
             res_inter[i] <- inter/area #proportion
         }
         hex_orig$cover <- res_inter
