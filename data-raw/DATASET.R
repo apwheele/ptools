@@ -59,12 +59,12 @@ nyc_borough <- function(){
     unzip(temp,exdir=path.expand('~/temp'))
     shp <- path.expand('~/temp/nybb_21c/nybb.shp')
     res_bor <- terra::vect(shp)
+    nyc_sf <- sf::st_read(dsn=shp)
+    nyc_sf <- sf::st_simplify(nyc_sf, preserveTopology = TRUE,dTolerance = 500)
     # Clean up the files
     unlink(temp)
     unlink(path.expand('~/temp/nybb_21c'),recursive=TRUE,force=TRUE)
     # Simplifying the boundary a bit to make file smaller
-    nyc_simpler <- terra::simplifyGeom(res_bor, 500)
-    nyc_sf <- sf::st_as_sf(nyc_simpler)
     nyc_sp <- sf::as_Spatial(nyc_sf)
     sp::proj4string(nyc_sp) <- pr
     return(nyc_sp)

@@ -28,8 +28,6 @@ Imports:
     RANN,
     spatstat.geom,
     spatstat.utils,
-    rgeos,
-    terra,
     sf,
     stats,
     methods

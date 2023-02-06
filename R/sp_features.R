@@ -163,16 +163,13 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
         # Tiny buffer to fix weird polys and collapse to one
         buff_tiny <- raster::buffer(outline,0.001)
         tot_n <- nrow(hex_orig)
-        res_inter <- rep(1,tot_n)
         # For not relying on rgeos, convert to terra
         hex_sf <- sf::st_as_sf(hex_orig)
         buff_sf <- sf::st_as_sf(buff_tiny)
-        for (i in hex_orig$id){
-            intpol <- terra::intersect(hex_sf[i,],buff_sf)
-            inter <- sf::st_area(intpol)
-            inter <- methods::as(inter,"numeric")
-            res_inter[i] <- inter/area #proportion
-        }
+        rc <- sf::st_intersection(hex_sf,buff_sf)
+        res_inter <- sf::st_area(rc)
+        res_inter <- methods::as(res_inter,"numeric")
+        res_inter <- res_inter/area
         hex_orig$cover <- res_inter
         # Selecting out area over
         hex_orig <- hex_orig[c(hex_orig$cover > clip_level),]
