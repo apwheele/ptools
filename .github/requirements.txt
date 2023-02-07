@@ -1,0 +1,30 @@
+# I use conda to manage R environments
+# see https://andrewpwheeler.com/2022/04/08/managing-r-environments-using-conda/
+# note, that conda install will not be 100% bleeding edge newest R environment
+#conda create --name ptools_dev -c conda-forge r-base
+#conda activate ptools_dev
+# conda install -c r rtools
+# conda install -c conda-forge gcc
+# conda install -c conda-forge m2w64-gcc
+#conda install -c conda-forge --file requirements.txt
+
+r-htmltools >= 0.5.4
+r-raster
+r-sf
+r-sp
+r-spatstat
+r-spatstat.geom
+r-spatstat.utils
+r-devtools
+r-markdown
+r-testthat
+r-partitions
+r-igraph
+r-rann
+
+
+# Note you do not install ptools in the environment to check it
+# it is dynamically loaded/checked using teh devtools tools
+
+# Then in Rterm session, may need to run (and compile by source)
+#update.packages(checkBuilt=TRUE,ask=FALSE)

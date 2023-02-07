@@ -174,10 +174,13 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
     #hex_pts <- sp::spsample(buff,cellsize=width_hex,type='hexagonal')
     #hex_pols <- sp::HexPoints2SpatialPolygons(hex_pts)
     buff_sf <- sf::st_as_sf(buff)
+    outline_sf <- sf::st_union(sf::st_as_sf(outline))
     hex_sf <- sf::st_make_grid(buff_sf,cellsize=width_hex,what = "polygons",square = FALSE)
-    hex_pols <- sf::as_Spatial(hex_sf)
     # Get over original
-    hex_orig <- hex_pols[outline,]
+    dist_hex <- methods::as(sf::st_distance(hex_sf,outline_sf),"numeric")
+    hex_orig <- sf::as_Spatial(hex_sf)
+    hex_orig <- hex_orig[c(dist_hex < 0.001),]
+    # Get over original
     coord_hex <- sp::coordinates(hex_orig)
     tot_n <- dim(coord_hex)[1]
     hex_orig$id <- 1:tot_n #turns into SpatialDataFrame
@@ -361,12 +364,12 @@ count_xy <- function(base,feat,weight=1){
 #' 
 dcount_xy <- function(base,feat,d,weight=1){
    # Calculate buffers
-   buff <- buff_sp(feat,d,dissolve=FALSE)
+   buff <- buff_sp(base,d,dissolve=FALSE)
    # Use over to count or sum
    if (weight == 1){
-       ov_buff <- sp::over(base,buff[,1],fn=length)
+       ov_buff <- sp::over(buff,feat[,1],fn=length)
    } else {
-       ov_buff <- sp::over(base,buff[,weight],fn=sum)
+       ov_buff <- sp::over(buff,feat[,weight],fn=sum)
    }
    ov_buff[is.na(ov_buff)] <- 0
    return(as.numeric(ov_buff[,1]))
