@@ -27,7 +27,7 @@ and street midpoints).
 \donttest{
 library(sp) # for sample/coordinates
 data(nyc_bor)
-nyc_buff <- raster::buffer(nyc_bor,50000)
+nyc_buff <- buff_sp(nyc_bor,50000)
 po <- sp::spsample(nyc_buff,20,'hexagonal')
 po$id <- 1:dim(coordinates(po))[1] # turns into SpatialDataFrame
 vo <- vor_sp(nyc_buff,po)

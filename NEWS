@@ -1,0 +1,7 @@
+        CHANGES IN ptools v2.0.0 2/7/2023
+
+OVERVIEW
+
+ptools version 2 does not make any major updates in terms of functionality. 
+It does remove dependencies on rgdal/rgeos, and adds in dependencies for sf.
+As such, I decided to create a major release version.

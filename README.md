@@ -11,8 +11,11 @@ help with analyzing count data, e.g. crime counts per month.
 
 ## Installation
 
-Hopefully in the future this will be on CRAN, but in the meantime, you
-can install this via devtools:
+To install the most recent version from CRAN, it is simply:
+
+    install.packages('ptools')
+
+You can install the current version on github using devtools:
 
     library(devtools)
     install_github("apwheele/ptools", build_vignettes = TRUE)
@@ -84,14 +87,13 @@ Here is an example checking the Poisson fit for a set of data:
 x <- rpois(1000,0.5)
 check_pois(x,0,max(x),mean(x))
 #> 
-#>  mean: 0.528 variance: 0.52373973973974
-#>   Int Freq       PoisF     ResidF Prop       PoisD      ResidD
-#> 1   0  586 589.7833576 -3.7833576 58.6 58.97833576 -0.37833576
-#> 2   1  319 311.4056128  7.5943872 31.9 31.14056128  0.75943872
-#> 3   2   79  82.2110818 -3.2110818  7.9  8.22110818 -0.32110818
-#> 4   3   14  14.4691504 -0.4691504  1.4  1.44691504 -0.04691504
-#> 5   4    1   1.9099279 -0.9099279  0.1  0.19099279 -0.09099279
-#> 6   5    1   0.2016884  0.7983116  0.1  0.02016884  0.07983116
+#>  mean: 0.541 variance: 0.532851851851852
+#>   Int Freq      PoisF      ResidF Prop      PoisD       ResidD
+#> 1   0  579 582.165795 -3.16579540 57.9 58.2165795 -0.316579540
+#> 2   1  321 314.951695  6.04830469 32.1 31.4951695  0.604830469
+#> 3   2   82  85.194434 -3.19443358  8.2  8.5194434 -0.319443358
+#> 4   3   16  15.363396  0.63660381  1.6  1.5363396  0.063660381
+#> 5   4    2   2.077899 -0.07789933  0.2  0.2077899 -0.007789933
 ```
 
 Here is an example extracting out near repeat strings (this is improved
@@ -103,11 +105,11 @@ using kdtrees):
 # Not quite 15k rows for burglaries from motor vehicles
 bmv <- read.csv('https://dl.dropbox.com/s/bpfd3l4ueyhvp7z/TheftFromMV.csv?dl=0')
 print(Sys.time()) 
-#> [1] "2022-12-15 15:31:19 EST"
+#> [1] "2023-02-07 09:53:24 EST"
 BigStrings <- near_strings2(dat=bmv,id='incidentnu',x='xcoordinat',
                             y='ycoordinat',tim='DateInt',DistThresh=1000,TimeThresh=3)
 print(Sys.time()) #very fast, only a few seconds on my machine
-#> [1] "2022-12-15 15:31:21 EST"
+#> [1] "2023-02-07 09:53:25 EST"
 print(head(BigStrings))
 #>             CompId CompNum
 #> 000036-2015      1       1
@@ -128,6 +130,10 @@ package directly.
 Things on the todo list:
 
 -   Tests for spatial feature engineering
+-   Figure out [no long doubles
+    issues](https://andrewpwheeler.com/2022/07/22/my-journey-submitting-to-cran/)
+    for small sample tests
+-   Conversion so functions can take both sp/sf objects
 -   Poisson z-score and weekly aggregation functions
 -   Potential geo functions
     -   HDR raster

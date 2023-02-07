@@ -44,14 +44,14 @@ plot(hnyc)
 plot(nyc_bor,border='red',add=TRUE)
 #Example clipping hexagons that have dongle hexagons
 hex_clip <- prep_hexgrid(nyc_bor,area=20000^2,clip_level=0.3)
-plot(hex_clip,border='blue',add=TRUE)
+plot(hex_clip,border='blue')
 plot(nyc_bor,border='red',add=TRUE)
 summary(hnyc)
 
 #Example clipping hexagons with no overlap crimes
 hnyc <- prep_hexgrid(nyc_bor,area=4000^2,point_over=nyc_shoot)
 plot(hnyc)
-plot(nyc_shoot,pch='.')
+plot(nyc_shoot,pch='.',add=TRUE)
 }
 
 }
