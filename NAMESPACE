@@ -3,6 +3,7 @@
 S3method(print,powalt)
 S3method(print,small_samptest)
 export(bisq_xy)
+export(buff_sp)
 export(check_pois)
 export(count_xy)
 export(dcount_xy)

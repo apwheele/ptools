@@ -22,7 +22,11 @@ The library ptools is a set of helper functions I have used over time to help wi
 
 ## Installation
 
-Hopefully in the future this will be on CRAN, but in the meantime, you can install this via devtools:
+To install the most recent version from CRAN, it is simply:
+
+    install.packages('ptools')
+
+You can install the current version on github using devtools:
 
     library(devtools)
     install_github("apwheele/ptools", build_vignettes = TRUE)
@@ -95,6 +99,8 @@ Always feel free to contribute either directly on Github, or email me with thoug
 Things on the todo list:
 
  - Tests for spatial feature engineering
+ - Figure out [no long doubles issues](https://andrewpwheeler.com/2022/07/22/my-journey-submitting-to-cran/) for small sample tests
+ - Conversion so functions can take both sp/sf objects
  - Poisson z-score and weekly aggregation functions
  - Potential geo functions
     - HDR raster

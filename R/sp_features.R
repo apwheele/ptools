@@ -1,3 +1,41 @@
+#' Creates buffer of sp polygon object
+#'
+#' Creates buffer of sp polygon object. Intended to replace raster::buffer, which relies on rgeos
+#'
+#' @param area SpatialPolygon or SpatialPolygonDataFrame that defines the area
+#' @param radius scaler for the size of the buffer (in whatever units the polygon is projected in)
+#' @param dissolve boolean (default TRUE), to dissolve into single object, or leave as multiple objects
+#'
+#' @details Under the hood, this converts sp objects into sf objects and uses `st_buffer`.
+#' When `dissolve=TRUE`, it uses `st_union(area)` and then buffers.
+#'
+#' @returns
+#' A SpatialPolygonDataFrame object (when dissolve=FALSE), or a SpatialPolygon object (when dissolve=TRUE)
+#' @export
+#' @examples
+#' \donttest{
+#' library(sp) #for sp plot methods
+#' # large grid cells
+#' data(nyc_bor)
+#' res <- buff_sp(nyc_bor,7000)
+#' plot(nyc_bor)
+#' plot(res,border='BLUE',add=TRUE)
+#' 
+#' # When dissolve=FALSE, still returns individual units
+#' # that can overlap
+#' res2 <- buff_sp(nyc_bor,7000,dissolve=FALSE)
+#' plot(res2)
+#' }
+buff_sp <- function(area,radius,dissolve=TRUE){
+    area_sf <- sf::st_as_sf(area)
+    if (dissolve){
+        area_sf <- sf::st_union(area_sf)
+    }
+    buff_sf <- sf::st_buffer(area_sf,radius)
+    buff_sp <- sf::as_Spatial(buff_sf)
+    return(buff_sp)
+}
+
 #' Creates vector grid cells over study area
 #'
 #' Creates grid cells of given size over particular study area.
@@ -62,9 +100,9 @@ prep_grid <- function(outline, size, clip_level=0, point_over=NULL, point_n=0){
     # If you pass in spatial points, also extract those covered
     # By at least one point (and get counts of points)
     if (!is.null(point_over)){
-        ch <- sp::over(sel_poly,point_over[,1],fn=length)
-        names(ch) <- 'count'
-        ch[is.na(ch)] <- 0
+        pt_sf <- sf::st_as_sf(point_over)
+        poly_sf <- sf::st_as_sf(sel_poly)
+        ch <- lengths(sf::st_intersects(poly_sf, pt_sf))
         sel_poly$count <- ch
         # selecing out minimal point number
         sel_poly <- sel_poly[c(sel_poly$count > point_n),]
@@ -131,10 +169,13 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
     # Buffer outline by just over the size
     width_hex <- dim_hex[2]
     buff_len <- width_hex*1.1
-    buff <- raster::buffer(outline,buff_len)
+    buff <- buff_sp(outline,buff_len)
     # Get Hexagon sampling
-    hex_pts <- sp::spsample(buff,cellsize=width_hex,type='hexagonal')
-    hex_pols <- sp::HexPoints2SpatialPolygons(hex_pts)
+    #hex_pts <- sp::spsample(buff,cellsize=width_hex,type='hexagonal')
+    #hex_pols <- sp::HexPoints2SpatialPolygons(hex_pts)
+    buff_sf <- sf::st_as_sf(buff)
+    hex_sf <- sf::st_make_grid(buff_sf,cellsize=width_hex,what = "polygons",square = FALSE)
+    hex_pols <- sf::as_Spatial(hex_sf)
     # Get over original
     hex_orig <- hex_pols[outline,]
     coord_hex <- sp::coordinates(hex_orig)
@@ -143,12 +184,12 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
     hex_orig$xG <- coord_hex[,1]
     hex_orig$yG <- coord_hex[,2]
     hex_orig$area <- area
+    hex_sf <- sf::st_as_sf(hex_orig)
     # If you pass in spatial points, also extract those covered
     # By at least one point (and get counts of points)
     if (!is.null(point_over)){
-        ch <- sp::over(hex_orig,point_over[,1],fn=length)
-        names(ch) <- 'count'
-        ch[is.na(ch)] <- 0
+        pt_sf <- sf::st_as_sf(point_over)
+        ch <- lengths(sf::st_intersects(hex_sf, pt_sf))
         hex_orig$count <- ch
         # selecing out minimal point number
         hex_orig <- hex_orig[c(hex_orig$count > point_n),]
@@ -156,15 +197,13 @@ prep_hexgrid <- function(outline,area,clip_level=0,point_over=NULL,point_n=0){
         last_nm <- length(names(hex_orig))
         names(hex_orig)[last_nm] <- 'count'
     }
-    # This is slower, so working second after point clip
-    # But probably want this to be 0 if using point clip
+    # Probably want this to be 0 if using point clip
     # If clip_level > 0, calculate intersection area
     if (clip_level > 0){
         # Tiny buffer to fix weird polys and collapse to one
-        buff_tiny <- raster::buffer(outline,0.001)
+        buff_tiny <- buff_sp(outline,0.001)
         tot_n <- nrow(hex_orig)
         # For not relying on rgeos, convert to terra
-        hex_sf <- sf::st_as_sf(hex_orig)
         buff_sf <- sf::st_as_sf(buff_tiny)
         rc <- sf::st_intersection(hex_sf,buff_sf)
         res_inter <- sf::st_area(rc)
@@ -322,7 +361,7 @@ count_xy <- function(base,feat,weight=1){
 #' 
 dcount_xy <- function(base,feat,d,weight=1){
    # Calculate buffers
-   buff <- raster::buffer(feat,d,dissolve=FALSE)
+   buff <- buff_sp(feat,d,dissolve=FALSE)
    # Use over to count or sum
    if (weight == 1){
        ov_buff <- sp::over(base,buff[,1],fn=length)
@@ -634,7 +673,7 @@ conv_sst_sp <- function(x){
 #' \donttest{
 #' library(sp) # for sample/coordinates
 #' data(nyc_bor)
-#' nyc_buff <- raster::buffer(nyc_bor,50000)
+#' nyc_buff <- buff_sp(nyc_bor,50000)
 #' po <- sp::spsample(nyc_buff,20,'hexagonal')
 #' po$id <- 1:dim(coordinates(po))[1] # turns into SpatialDataFrame
 #' vo <- vor_sp(nyc_buff,po)
