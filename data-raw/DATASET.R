@@ -114,12 +114,14 @@ side_cafe <- function(outline){
     side_cafe <- read.csv(url,stringsAsFactors=FALSE)
     # only worrying about active
     side_cafe <- side_cafe[side_cafe$LIC_STATUS == 'Active',]
+    side_cafe$x <- side_cafe$FINAL_X
+    side_cafe$y <- side_cafe$FINAL_Y
     side_cafe <- side_cafe[,c('LICENSE_NBR','BUSINESS_NAME','SWC_SQ_FT','SWC_TABLES','SWC_CHAIRS',
-                              'LATITUDE','LONGITUDE')]
+                              'x','y')]
     #side_cafe$LIC_STATUS <- as.factor(side_cafe$LIC_STATUS)
-    proj_nyc <- proj4::project(as.matrix(side_cafe[,c('LONGITUDE','LATITUDE')]), proj=pr)
-    side_cafe$x <- proj_nyc[,1]
-    side_cafe$y <- proj_nyc[,2]
+    #proj_nyc <- proj4::project(as.matrix(side_cafe[,c('LONGITUDE','LATITUDE')]), proj=pr)
+    #side_cafe$x <- proj_nyc[,1]
+    #side_cafe$y <- proj_nyc[,2]
     # Getting rid of points duplicated at same location
     side_cafe <- side_cafe[!duplicated(side_cafe[,c('x','y')]),]
     cafe_sp <- sp::SpatialPointsDataFrame(side_cafe[,c("x","y")],data=side_cafe,proj4string=sp::CRS(pr))
