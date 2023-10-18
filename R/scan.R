@@ -5,7 +5,7 @@
 #' @param L number of time periods in the window
 #' @param k window scan time period
 #' @param mu Poisson averaged per single time period
-#' @param n number of time periods
+#' @param n observed count
 #'
 #' @details When examining counts of items happening in a specific, discrete set of windows,
 #' e.g. counts of crime per week, one can use the Poisson PMF to determine the probability of
